@@ -1,0 +1,41 @@
+#:kivy 2.0.0
+
+MDScreen:
+    name: 'main'
+    md_bg_color: 1, 1, 1, 1
+
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(20)
+        spacing: dp(20)
+
+        Widget:
+            size_hint_y: None
+            height: dp(50)  # Altura del espacio en píxeles
+
+        Image:
+            source: 'assets/logo.png'  # Asegúrate de tener este archivo en la carpeta del proyecto
+            size_hint: (0.95, 0.6)
+            pos_hint: {'center_x': 0.5}
+            allow_stretch: True
+            keep_ratio: True
+
+        MDLabel:
+            text: "¡BIENVENIDO A TASKTIME!"
+            halign: "center"
+            font_style: "H5"
+            font_name: "assets/TittleRegular.otf"
+            text_color: 0, 0, 0, 1
+
+        MDRaisedButton:
+            text: "Ir a Home"
+            pos_hint: {'center_x': 0.5}
+            size_hint: (0.6, None)
+            height: dp(48)
+            md_bg_color: 0.835, 0.506, 0.631, 1  # Color rosa del botón
+            text_color: 1, 1, 1, 1
+            on_release: app.go_to_Home()  # Al presionar el botón, ir a Home
+        
+        Widget:
+            size_hint_y: None
+            height: dp(50)  # Altura del espacio en píxeles

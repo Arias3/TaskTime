@@ -1,10 +1,17 @@
-from kivy.app import App
-from kivy.uix.label import Label 
+from kivymd.app import MDApp
+from kivymd.uix.screen import MDScreen
+from kivy.lang import Builder
 
-class KivySaludo(App):
-
+class MainApp(MDApp):
     def build(self):
+        # Configuración del tema
+        self.theme_cls.theme_style = 'Light'
+        self.theme_cls.primary_palette = 'Teal'
+        return Builder.load_file('design.kv')
 
-        return Label(text="Hola Angie")
+    def start_app(self):
+        print("Iniciando la app...")
+        # Aquí puedes agregar la lógica para cambiar de pantalla o iniciar funciones adicionales
 
-KivySaludo().run()
+if __name__ == "__main__":
+    MainApp().run()
