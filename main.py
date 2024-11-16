@@ -1,17 +1,26 @@
-from kivymd.app import MDApp
-from kivymd.uix.screen import MDScreen
+from kivymd.app import MDApp  # Importar MDApp desde KivyMD
+from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 
-class MainApp(MDApp):
+# Carga del archivo de diseño KV
+Builder.load_file("design.kv")
+
+# Declaración de las pantallas
+class MenuScreen(Screen):
+    def go_to_home(self):
+        self.manager.current = 'home'  # Cambia a la pantalla de inicio
+
+class HomeScreen(Screen):
+    pass
+
+# La clase principal de la app debe heredar de MDApp
+class TestApp(MDApp):
     def build(self):
-        # Configuración del tema
-        self.theme_cls.theme_style = 'Light'
-        self.theme_cls.primary_palette = 'Teal'
-        return Builder.load_file('design.kv')
+        # Crear el gestor de pantallas
+        sm = ScreenManager()
+        sm.add_widget(MenuScreen(name='menu'))
+        sm.add_widget(HomeScreen(name='home'))
+        return sm
 
-    def start_app(self):
-        print("Iniciando la app...")
-        # Aquí puedes agregar la lógica para cambiar de pantalla o iniciar funciones adicionales
-
-if __name__ == "__main__":
-    MainApp().run()
+if __name__ == '__main__':
+    TestApp().run()

@@ -1,9 +1,8 @@
 #:kivy 2.0.0
+#:import MDLabel kivymd.uix.label.MDLabel
+#:import MDRaisedButton kivymd.uix.button.MDRaisedButton
 
-MDScreen:
-    name: 'main'
-    md_bg_color: 1, 1, 1, 1
-
+<MenuScreen>:
     BoxLayout:
         orientation: 'vertical'
         padding: dp(20)
@@ -14,11 +13,10 @@ MDScreen:
             height: dp(50)  # Altura del espacio en píxeles
 
         Image:
-            source: 'assets/logo.png'  # Asegúrate de tener este archivo en la carpeta del proyecto
+            source: 'assets/logo.png'
             size_hint: (0.95, 0.6)
             pos_hint: {'center_x': 0.5}
-            allow_stretch: True
-            keep_ratio: True
+            fit_mode: 'contain'  # Reemplaza a keep_ratio
 
         MDLabel:
             text: "¡BIENVENIDO A TASKTIME!"
@@ -34,8 +32,55 @@ MDScreen:
             height: dp(48)
             md_bg_color: 0.835, 0.506, 0.631, 1  # Color rosa del botón
             text_color: 1, 1, 1, 1
-            on_release: app.go_to_Home()  # Al presionar el botón, ir a Home
+            on_release: root.go_to_home()  # Al presionar el botón, ir a Home
         
         Widget:
             size_hint_y: None
             height: dp(50)  # Altura del espacio en píxeles
+
+
+<HomeScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(20)
+        spacing: dp(20)
+
+        # Header con el logo pequeño a la izquierda
+        BoxLayout:
+            size_hint_y: None
+            height: dp(50)
+            orientation: 'horizontal'
+            padding: dp(10)
+            Image:
+                source: 'assets/logo.png'
+                size_hint: (None, None)
+                size: dp(40), dp(40)  # Tamaño pequeño para el logo
+
+        # Botones de la pantalla Home
+        MDRaisedButton:
+            text: "Calendario"
+            pos_hint: {'center_x': 0.5}
+            size_hint: (0.6, None)
+            height: dp(48)
+            md_bg_color: 0.835, 0.506, 0.631, 1
+            text_color: 1, 1, 1, 1
+
+        MDRaisedButton:
+            text: "Recordatorios"
+            pos_hint: {'center_x': 0.5}
+            size_hint: (0.6, None)
+            height: dp(48)
+            md_bg_color: 0.835, 0.506, 0.631, 1
+            text_color: 1, 1, 1, 1
+
+        MDRaisedButton:
+            text: "Pendientes"
+            pos_hint: {'center_x': 0.5}
+            size_hint: (0.6, None)
+            height: dp(48)
+            md_bg_color: 0.835, 0.506, 0.631, 1
+            text_color: 1, 1, 1, 1
+
+        Widget:
+            size_hint_y: None
+            height: dp(50)
