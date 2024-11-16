@@ -37,50 +37,151 @@
         Widget:
             size_hint_y: None
             height: dp(50)  # Altura del espacio en píxeles
-
-
 <HomeScreen>:
-    BoxLayout:
-        orientation: 'vertical'
-        padding: dp(20)
-        spacing: dp(20)
-
-        # Header con el logo pequeño a la izquierda
+    FloatLayout:
+        # BoxLayout para el header
         BoxLayout:
+            orientation: 'vertical'
+            padding: dp(20)
+            spacing: dp(20)
             size_hint_y: None
-            height: dp(50)
-            orientation: 'horizontal'
-            padding: dp(10)
-            Image:
-                source: 'assets/logo.png'
-                size_hint: (None, None)
-                size: dp(40), dp(40)  # Tamaño pequeño para el logo
+            height: dp(110)  # Altura del header
+            pos_hint: {'top': 1}  # Ancla al borde superior de la ventana
 
-        # Botones de la pantalla Home
-        MDRaisedButton:
-            text: "Calendario"
-            pos_hint: {'center_x': 0.5}
-            size_hint: (0.6, None)
-            height: dp(48)
-            md_bg_color: 0.835, 0.506, 0.631, 1
-            text_color: 1, 1, 1, 1
+            # Header con el logo pequeño a la izquierda
+            BoxLayout:
+                size_hint_y: None
+                height: dp(80)  # Altura del header
+                orientation: 'horizontal'
+                padding: dp(10)
+                canvas.before:
+                    # Color de fondo con esquinas redondeadas
+                    Color:
+                        rgba: 0.831, 0.506, 0.631, 1  # Color del fondo (#d481a1)
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [15]  # Esquinas redondeadas
 
-        MDRaisedButton:
-            text: "Recordatorios"
-            pos_hint: {'center_x': 0.5}
-            size_hint: (0.6, None)
-            height: dp(48)
-            md_bg_color: 0.835, 0.506, 0.631, 1
-            text_color: 1, 1, 1, 1
+                # Logo alineado a la izquierda con separación
+                Image:
+                    source: 'assets/logo2.png'
+                    size_hint: (None, None)
+                    size: dp(60), dp(60)  # Aumentamos el tamaño del logo
+                    pos_hint: {"x": 0}  # Alineado a la izquierda
 
-        MDRaisedButton:
-            text: "Pendientes"
-            pos_hint: {'center_x': 0.5}
-            size_hint: (0.6, None)
-            height: dp(48)
-            md_bg_color: 0.835, 0.506, 0.631, 1
-            text_color: 1, 1, 1, 1
+                # "MENÚ" centrado
+                Label:
+                    text: "MENÚ"
+                    size_hint_x: None
+                    width: self.parent.width - dp(80)  # El ancho restante para el texto
+                    halign: 'center'  # Centrado en el recuadro
+                    valign: 'middle'
+                    font_size: '50sp'  # Aumentamos el tamaño del texto
+                    font_name: "assets/TittleRegular.otf"
+                    color: 0, 0, 0, 1  # Color negro para el texto
 
+        # Espaciado entre el header y los botones
         Widget:
             size_hint_y: None
-            height: dp(50)
+            height: dp(20)  # Espaciado entre el header y los botones
+
+        # BoxLayout para los botones del menú
+        BoxLayout:
+            orientation: 'vertical'
+            padding: dp(10)
+            spacing: dp(10)
+            size_hint_y: None
+            height: dp(800)  # Ajusta según sea necesario
+
+            # Botón de opción 1
+            MDCard:
+                radius: "10dp"
+                padding: "10dp"
+                size_hint: None, None
+                size: "280dp", "200dp"
+                pos_hint: {"center_x": 0.5, "center_y": 0.75}
+                on_release: app.root.transition = RiseInTransition()
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    spacing: "10dp"
+                    Image:
+                        source: 'assets/calendario.png'
+                        size_hint: None, None
+                        size: "100dp", "100dp"  # Ajusta el tamaño de la imagen según sea necesario
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                    Label:
+                        text: "Calendario"
+                        halign: "center"
+                        theme_text_color: "Secondary"
+
+            # Botón de opción 2
+            MDCard:
+                radius: "10dp"
+                padding: "10dp"
+                size_hint: None, None
+                size: "280dp", "200dp"
+                pos_hint: {"center_x": 0.5, "center_y": 0.55}
+                on_release: app.root.transition = RiseInTransition()
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    spacing: "10dp"
+                    Image:
+                        source: 'assets/pendientes.png'
+                        size_hint: None, None
+                        size: "100dp", "100dp"  # Ajusta el tamaño de la imagen según sea necesario
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                    Label:
+                        text: "Pendientes"
+                        halign: "center"
+                        theme_text_color: "Secondary"
+
+            # Botón de opción 3
+            MDCard:
+                radius: "10dp"
+                padding: "10dp"
+                size_hint: None, None
+                size: "280dp", "200dp"
+                pos_hint: {"center_x": 0.5, "center_y": 0.35}
+                on_release: app.root.transition = RiseInTransition()
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    spacing: "10dp"
+                    Image:
+                        source: 'assets/recordatorios.png'
+                        size_hint: None, None
+                        size: "100dp", "100dp"  # Ajusta el tamaño de la imagen según sea necesario
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                    Label:
+                        text: "Recordatorios"
+                        halign: "center"
+                        theme_text_color: "Secondary"
+
+            # Botón de opción 4
+            MDCard:
+                radius: "10dp"
+                padding: "10dp"
+                size_hint: None, None
+                size: "280dp", "200dp"
+                pos_hint: {"center_x": 0.5, "center_y": 0.15}
+                on_release: app.root.transition = RiseInTransition()
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    spacing: "10dp"
+                    Image:
+                        source: 'assets/configuracion.png'
+                        size_hint: None, None
+                        size: "100dp", "100dp"  # Ajusta el tamaño de la imagen según sea necesario
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                    Label:
+                        text: "Configuración"
+                        halign: "center"
+                        theme_text_color: "Secondary"
