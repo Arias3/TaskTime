@@ -93,7 +93,7 @@
                 size: dp(210), dp(110)
                 padding: dp(15)
                 ripple_behavior: True
-                on_release: print("Calendario presionado")
+                on_release: root.go_to_calendar()
                 md_bg_color: 235 / 255, 208 / 255, 215 / 255, 1  # Color de fondo personalizado
 
                 canvas:
@@ -122,7 +122,7 @@
                 size: dp(210), dp(110)
                 padding: dp(15)
                 ripple_behavior: True
-                on_release: print("Recordatorios presionado")
+                on_release: root.go_to_reminders()
 
                 canvas:
                     Color:
@@ -150,7 +150,7 @@
                 size: dp(210), dp(110)
                 padding: dp(15)
                 ripple_behavior: True
-                on_release: print("Pendientes presionado")
+                on_release: root.go_to_pending()
 
                 canvas:
                     Color:
@@ -178,7 +178,7 @@
                 size: dp(210), dp(110)
                 padding: dp(15)
                 ripple_behavior: True
-                on_release: print("Configuración presionado")
+                on_release: root.go_to_settings() 
 
                 canvas:
                     Color:
@@ -198,3 +198,72 @@
                         size_hint: None, None
                         size: dp(82.59), dp(77)
                         pos_hint: {"center_x": 0.5}
+
+
+# Pantalla de Calendario
+<CalendarScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        Label:
+            text: "Pantalla de Calendario"
+            font_size: "30sp"
+            size_hint_y: None
+            height: dp(100)
+            halign: "center"
+        Button:
+            text: "Regresar"
+            size_hint: None, None
+            size: dp(200), dp(50)
+            pos_hint: {"center_x": 0.5}
+            on_release: app.root.current = "home"
+
+# Pantalla de Recordatorios
+<RemindersScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        Label:
+            text: "Pantalla de Recordatorios"
+            font_size: "30sp"
+            size_hint_y: None
+            height: dp(100)
+            halign: "center"
+        Button:
+            text: "Regresar"
+            size_hint: None, None
+            size: dp(200), dp(50)
+            pos_hint: {"center_x": 0.5}
+            on_release: app.root.current = "home"
+
+# Pantalla de Pendientes
+<PendingScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        Label:
+            text: "Pantalla de Pendientes"
+            font_size: "30sp"
+            size_hint_y: None
+            height: dp(100)
+            halign: "center"
+        Button:
+            text: "Regresar"
+            size_hint: None, None
+            size: dp(200), dp(50)
+            pos_hint: {"center_x": 0.5}
+            on_release: app.root.current = "home"
+
+# Pantalla de Configuración
+<SettingsScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        Label:
+            text: "Pantalla de Configuración"
+            font_size: "30sp"
+            size_hint_y: None
+            height: dp(100)
+            halign: "center"
+        Button:
+            text: "Regresar"
+            size_hint: None, None
+            size: dp(200), dp(50)
+            pos_hint: {"center_x": 0.5}
+            on_release: app.root.current = "home"
