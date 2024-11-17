@@ -42,10 +42,10 @@
         # Header (Parte superior de la pantalla)
         BoxLayout:
             orientation: 'horizontal'
-            padding: dp(10)
-            spacing: dp(10)
+            padding: dp(15)
+            spacing: dp(15)
             size_hint_y: None
-            height: dp(80)  # Altura fija para el header
+            height: dp(90)  # Altura fija para el header
             pos_hint: {'top': 1}  # Anclado al borde superior
 
             canvas:
@@ -60,13 +60,13 @@
             Image:
                 source: 'assets/logo2.png'
                 size_hint: None, None
-                size: dp(60), dp(60)
+                size: dp(70), dp(70)
                 pos_hint: {"center_y": 0.5}
 
             # Título del header
             Label:
                 text: "MENÚ"
-                font_size: "30sp"
+                font_size: "35sp"
                 font_name: "assets/TittleRegular.otf"
                 color: 0, 0, 0, 1
                 valign: "middle"
@@ -78,13 +78,13 @@
             spacing: dp(15)  # Espaciado entre botones
             size_hint: None, None
             size: dp(250), dp(0.8 * root.height)  # Ancho fijo, altura proporcional al 80% de la pantalla
-            pos_hint: {"center_x": 0.55, "top": 1.15}  # Justo debajo del header
+            pos_hint: {"center_x": 0.55, "top": 1.05}  # Justo debajo del header
 
             # Primer botón
             MDCard:
                 radius: dp(15)
                 size_hint: None, None
-                size: dp(210), dp(90)
+                size: dp(210), dp(110)
                 padding: dp(15)
                 ripple_behavior: True
                 on_release: print("Calendario presionado")
@@ -106,14 +106,14 @@
                     Image:
                         source: 'assets/calendario.png'
                         size_hint: None, None
-                        size: dp(80.59), dp(75)  # Tamaño proporcional de la imagen
+                        size: dp(82.59), dp(77)  # Tamaño proporcional de la imagen
                         pos_hint: {"center_x": 0.5}
 
             # Segundo botón
             MDCard:
                 radius: dp(15)
                 size_hint: None, None
-                size: dp(210), dp(90)
+                size: dp(210), dp(110)
                 padding: dp(15)
                 ripple_behavior: True
                 on_release: print("Recordatorios presionado")
@@ -134,14 +134,14 @@
                     Image:
                         source: 'assets/recordatorios.png'
                         size_hint: None, None
-                        size: dp(80.59), dp(75)
+                        size: dp(82.59), dp(77)
                         pos_hint: {"center_x": 0.5}
 
             # Tercer botón
             MDCard:
                 radius: dp(15)
                 size_hint: None, None
-                size: dp(210), dp(90)
+                size: dp(210), dp(110)
                 padding: dp(15)
                 ripple_behavior: True
                 on_release: print("Pendientes presionado")
@@ -162,14 +162,14 @@
                     Image:
                         source: 'assets/pendientes.png'
                         size_hint: None, None
-                        size: dp(80.59), dp(75)
+                        size: dp(82.59), dp(77)
                         pos_hint: {"center_x": 0.5}
 
             # Cuarto botón
             MDCard:
                 radius: dp(15)
                 size_hint: None, None
-                size: dp(210), dp(90)
+                size: dp(210), dp(110)
                 padding: dp(15)
                 ripple_behavior: True
                 on_release: print("Configuración presionado")
@@ -190,5 +190,5 @@
                     Image:
                         source: 'assets/configuracion.png'
                         size_hint: None, None
-                        size: dp(80.59), dp(75)
+                        size: dp(82.59), dp(77)
                         pos_hint: {"center_x": 0.5}
