@@ -5,38 +5,44 @@
 <MenuScreen>:
     BoxLayout:
         orientation: 'vertical'
-        padding: dp(20)
-        spacing: dp(20)
+        padding: dp(20)  # Padding general
+        spacing: dp(20)  # Espaciado entre los elementos
 
+        # Espacio vacío para ajuste visual
         Widget:
             size_hint_y: None
-            height: dp(50)  # Altura del espacio en píxeles
+            height: dp(50)
 
+        # Imagen de logo en la pantalla de bienvenida
         Image:
             source: 'assets/logo.png'
             size_hint: (0.95, 0.6)
             pos_hint: {'center_x': 0.5}
-            fit_mode: 'contain'  # Reemplaza a keep_ratio
+            fit_mode: 'contain'  # Ajuste de imagen, similar a keep_ratio
 
+        # Título en la pantalla de bienvenida
         MDLabel:
             text: "¡BIENVENIDO A TASKTIME!"
             halign: "center"
             font_style: "H5"
-            font_name: "assets/TittleRegular.otf"
-            text_color: 0, 0, 0, 1
+            font_name: "assets/TittleRegular.otf"  # Fuente personalizada
+            text_color: 0, 0, 0, 1  # Color del texto (negro)
 
+        # Botón para acceder
         MDRaisedButton:
             text: "Acceder"
             pos_hint: {'center_x': 0.5}
             size_hint: (0.6, None)
-            height: dp(48)
-            md_bg_color: 0.835, 0.506, 0.631, 1  # Color rosa del botón
-            text_color: 1, 1, 1, 1
-            on_release: root.go_to_home()  # Al presionar el botón, ir a Home
-        
+            height: dp(48)  # Altura del botón
+            md_bg_color: 0.835, 0.506, 0.631, 1  # Color de fondo rosa
+            text_color: 1, 1, 1, 1  # Color del texto (blanco)
+            on_release: root.go_to_home()  # Acción al presionar el botón
+
+        # Espacio vacío para ajuste visual
         Widget:
             size_hint_y: None
-            height: dp(50)  # Altura del espacio en píxeles
+            height: dp(50)
+
 <HomeScreen>:
     FloatLayout:
         # Header (Parte superior de la pantalla)
@@ -50,7 +56,7 @@
 
             canvas:
                 Color:
-                    rgba: 0.831, 0.506, 0.631, 1  # Color del fondo (#d481a1)
+                    rgba: 0.831, 0.506, 0.631, 1  # Color de fondo (#d481a1)
                 RoundedRectangle:
                     pos: self.pos
                     size: self.size
@@ -68,7 +74,7 @@
                 text: "MENÚ"
                 font_size: "35sp"
                 font_name: "assets/TittleRegular.otf"
-                color: 0, 0, 0, 1
+                color: 0, 0, 0, 1  # Color del texto (negro)
                 valign: "middle"
                 halign: "center"
 
@@ -80,7 +86,7 @@
             size: dp(250), dp(0.8 * root.height)  # Ancho fijo, altura proporcional al 80% de la pantalla
             pos_hint: {"center_x": 0.55, "top": 1.05}  # Justo debajo del header
 
-            # Primer botón
+            # Primer botón (Calendario)
             MDCard:
                 radius: dp(15)
                 size_hint: None, None
@@ -88,7 +94,7 @@
                 padding: dp(15)
                 ripple_behavior: True
                 on_release: print("Calendario presionado")
-                md_bg_color: 235 / 255, 208 / 255, 215 / 255, 1
+                md_bg_color: 235 / 255, 208 / 255, 215 / 255, 1  # Color de fondo personalizado
 
                 canvas:
                     Color:
@@ -109,7 +115,7 @@
                         size: dp(82.59), dp(77)  # Tamaño proporcional de la imagen
                         pos_hint: {"center_x": 0.5}
 
-            # Segundo botón
+            # Segundo botón (Recordatorios)
             MDCard:
                 radius: dp(15)
                 size_hint: None, None
@@ -137,7 +143,7 @@
                         size: dp(82.59), dp(77)
                         pos_hint: {"center_x": 0.5}
 
-            # Tercer botón
+            # Tercer botón (Pendientes)
             MDCard:
                 radius: dp(15)
                 size_hint: None, None
@@ -165,7 +171,7 @@
                         size: dp(82.59), dp(77)
                         pos_hint: {"center_x": 0.5}
 
-            # Cuarto botón
+            # Cuarto botón (Configuración)
             MDCard:
                 radius: dp(15)
                 size_hint: None, None
