@@ -39,149 +39,156 @@
             height: dp(50)  # Altura del espacio en píxeles
 <HomeScreen>:
     FloatLayout:
-        # BoxLayout para el header
+        # Header (Parte superior de la pantalla)
         BoxLayout:
-            orientation: 'vertical'
-            padding: dp(20)
-            spacing: dp(20)
-            size_hint_y: None
-            height: dp(110)  # Altura del header
-            pos_hint: {'top': 1}  # Ancla al borde superior de la ventana
-
-            # Header con el logo pequeño a la izquierda
-            BoxLayout:
-                size_hint_y: None
-                height: dp(80)  # Altura del header
-                orientation: 'horizontal'
-                padding: dp(10)
-                canvas.before:
-                    # Color de fondo con esquinas redondeadas
-                    Color:
-                        rgba: 0.831, 0.506, 0.631, 1  # Color del fondo (#d481a1)
-                    RoundedRectangle:
-                        pos: self.pos
-                        size: self.size
-                        radius: [15]  # Esquinas redondeadas
-
-                # Logo alineado a la izquierda con separación
-                Image:
-                    source: 'assets/logo2.png'
-                    size_hint: (None, None)
-                    size: dp(60), dp(60)  # Aumentamos el tamaño del logo
-                    pos_hint: {"x": 0}  # Alineado a la izquierda
-
-                # "MENÚ" centrado
-                Label:
-                    text: "MENÚ"
-                    size_hint_x: None
-                    width: self.parent.width - dp(80)  # El ancho restante para el texto
-                    halign: 'center'  # Centrado en el recuadro
-                    valign: 'middle'
-                    font_size: '50sp'  # Aumentamos el tamaño del texto
-                    font_name: "assets/TittleRegular.otf"
-                    color: 0, 0, 0, 1  # Color negro para el texto
-
-        # Espaciado entre el header y los botones
-        Widget:
-            size_hint_y: None
-            height: dp(20)  # Espaciado entre el header y los botones
-
-        # BoxLayout para los botones del menú
-        BoxLayout:
-            orientation: 'vertical'
+            orientation: 'horizontal'
             padding: dp(10)
             spacing: dp(10)
             size_hint_y: None
-            height: dp(800)  # Ajusta según sea necesario
+            height: dp(80)  # Altura fija para el header
+            pos_hint: {'top': 1}  # Anclado al borde superior
 
-            # Botón de opción 1
-            MDCard:
-                radius: "10dp"
-                padding: "10dp"
+            canvas:
+                Color:
+                    rgba: 0.831, 0.506, 0.631, 1  # Color del fondo (#d481a1)
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [20]  # Esquinas redondeadas
+
+            # Logo en el header
+            Image:
+                source: 'assets/logo2.png'
                 size_hint: None, None
-                size: "280dp", "200dp"
-                pos_hint: {"center_x": 0.5, "center_y": 0.75}
-                on_release: app.root.transition = RiseInTransition()
+                size: dp(60), dp(60)
+                pos_hint: {"center_y": 0.5}
+
+            # Título del header
+            Label:
+                text: "MENÚ"
+                font_size: "30sp"
+                font_name: "assets/TittleRegular.otf"
+                color: 0, 0, 0, 1
+                valign: "middle"
+                halign: "center"
+
+        # Contenedor para los botones
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: dp(15)  # Espaciado entre botones
+            size_hint: None, None
+            size: dp(250), dp(0.8 * root.height)  # Ancho fijo, altura proporcional al 80% de la pantalla
+            pos_hint: {"center_x": 0.55, "top": 1.15}  # Justo debajo del header
+
+            # Primer botón
+            MDCard:
+                radius: dp(15)
+                size_hint: None, None
+                size: dp(210), dp(90)
+                padding: dp(15)
+                ripple_behavior: True
+                on_release: print("Calendario presionado")
+                md_bg_color: 235 / 255, 208 / 255, 215 / 255, 1
+
+                canvas:
+                    Color:
+                        rgba: 235 / 255, 208 / 255, 215 / 255, 1  # Color de fondo RGB(235, 208, 215)
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [15]
 
                 BoxLayout:
-                    orientation: 'vertical'
-                    spacing: "10dp"
+                    orientation: "vertical"
+                    spacing: dp(10)
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
                     Image:
                         source: 'assets/calendario.png'
                         size_hint: None, None
-                        size: "100dp", "100dp"  # Ajusta el tamaño de la imagen según sea necesario
-                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                        size: dp(80.59), dp(75)  # Tamaño proporcional de la imagen
+                        pos_hint: {"center_x": 0.5}
 
-                    Label:
-                        text: "Calendario"
-                        halign: "center"
-                        theme_text_color: "Secondary"
-
-            # Botón de opción 2
+            # Segundo botón
             MDCard:
-                radius: "10dp"
-                padding: "10dp"
+                radius: dp(15)
                 size_hint: None, None
-                size: "280dp", "200dp"
-                pos_hint: {"center_x": 0.5, "center_y": 0.55}
-                on_release: app.root.transition = RiseInTransition()
+                size: dp(210), dp(90)
+                padding: dp(15)
+                ripple_behavior: True
+                on_release: print("Recordatorios presionado")
+
+                canvas:
+                    Color:
+                        rgba: 235 / 255, 208 / 255, 215 / 255, 1  # Color de fondo RGB(235, 208, 215)
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [15]
 
                 BoxLayout:
-                    orientation: 'vertical'
-                    spacing: "10dp"
-                    Image:
-                        source: 'assets/pendientes.png'
-                        size_hint: None, None
-                        size: "100dp", "100dp"  # Ajusta el tamaño de la imagen según sea necesario
-                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    orientation: "vertical"
+                    spacing: dp(10)
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
-                    Label:
-                        text: "Pendientes"
-                        halign: "center"
-                        theme_text_color: "Secondary"
-
-            # Botón de opción 3
-            MDCard:
-                radius: "10dp"
-                padding: "10dp"
-                size_hint: None, None
-                size: "280dp", "200dp"
-                pos_hint: {"center_x": 0.5, "center_y": 0.35}
-                on_release: app.root.transition = RiseInTransition()
-
-                BoxLayout:
-                    orientation: 'vertical'
-                    spacing: "10dp"
                     Image:
                         source: 'assets/recordatorios.png'
                         size_hint: None, None
-                        size: "100dp", "100dp"  # Ajusta el tamaño de la imagen según sea necesario
-                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                        size: dp(80.59), dp(75)
+                        pos_hint: {"center_x": 0.5}
 
-                    Label:
-                        text: "Recordatorios"
-                        halign: "center"
-                        theme_text_color: "Secondary"
-
-            # Botón de opción 4
+            # Tercer botón
             MDCard:
-                radius: "10dp"
-                padding: "10dp"
+                radius: dp(15)
                 size_hint: None, None
-                size: "280dp", "200dp"
-                pos_hint: {"center_x": 0.5, "center_y": 0.15}
-                on_release: app.root.transition = RiseInTransition()
+                size: dp(210), dp(90)
+                padding: dp(15)
+                ripple_behavior: True
+                on_release: print("Pendientes presionado")
+
+                canvas:
+                    Color:
+                        rgba: 235 / 255, 208 / 255, 215 / 255, 1  # Color de fondo RGB(235, 208, 215)
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [15]
 
                 BoxLayout:
-                    orientation: 'vertical'
-                    spacing: "10dp"
+                    orientation: "vertical"
+                    spacing: dp(10)
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                    Image:
+                        source: 'assets/pendientes.png'
+                        size_hint: None, None
+                        size: dp(80.59), dp(75)
+                        pos_hint: {"center_x": 0.5}
+
+            # Cuarto botón
+            MDCard:
+                radius: dp(15)
+                size_hint: None, None
+                size: dp(210), dp(90)
+                padding: dp(15)
+                ripple_behavior: True
+                on_release: print("Configuración presionado")
+
+                canvas:
+                    Color:
+                        rgba: 235 / 255, 208 / 255, 215 / 255, 1  # Color de fondo RGB(235, 208, 215)
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [15]
+
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(10)
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
                     Image:
                         source: 'assets/configuracion.png'
                         size_hint: None, None
-                        size: "100dp", "100dp"  # Ajusta el tamaño de la imagen según sea necesario
-                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
-
-                    Label:
-                        text: "Configuración"
-                        halign: "center"
-                        theme_text_color: "Secondary"
+                        size: dp(80.59), dp(75)
+                        pos_hint: {"center_x": 0.5}
