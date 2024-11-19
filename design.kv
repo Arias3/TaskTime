@@ -43,162 +43,84 @@
             size_hint_y: None
             height: dp(50)
 
+<CustomButton@MDCard>:
+    image_source: ''  # Definir la propiedad de imagen
+    radius: dp(15)
+    size_hint: None, None
+    size: dp(210), dp(110)
+    padding: dp(15)
+    ripple_behavior: True
+    md_bg_color: 235 / 255, 208 / 255, 215 / 255, 1  # Color de fondo personalizado
+    pos_hint: {"center_x": 0.5}  # Centra horizontalmente el MDCard
+
+    BoxLayout:
+        orientation: "vertical"
+        spacing: dp(10)
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+        Image:
+            source: root.image_source  # Utiliza la propiedad image_source
+            size_hint: None, None
+            size: dp(82.59), dp(77)
+            pos_hint: {"center_x": 0.5}
+
 <HomeScreen>:
-    FloatLayout:
-        # Header (Parte superior de la pantalla)
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_y: None
+        height: self.minimum_height
+        pos_hint: {'top': 1}
+
         BoxLayout:
             orientation: 'horizontal'
             padding: dp(15)
             spacing: dp(15)
             size_hint_y: None
-            height: dp(90)  # Altura fija para el header
-            pos_hint: {'top': 1}  # Anclado al borde superior
 
             canvas:
                 Color:
-                    rgba: 0.831, 0.506, 0.631, 1  # Color de fondo (#d481a1)
+                    rgba: 0.831, 0.506, 0.631, 1
                 RoundedRectangle:
                     pos: self.pos
                     size: self.size
-                    radius: [20]  # Esquinas redondeadas
+                    radius: [0, 0, 20, 20]
 
-            # Logo en el header
             Image:
                 source: 'assets/logo2.png'
                 size_hint: None, None
                 size: dp(70), dp(70)
                 pos_hint: {"center_y": 0.5}
 
-            # Título del header
             Label:
                 text: "MENÚ"
                 font_size: "35sp"
                 font_name: "assets/TittleRegular.otf"
-                color: 0, 0, 0, 1  # Color del texto (negro)
+                color: 0, 0, 0, 1
                 valign: "middle"
                 halign: "center"
 
-        # Contenedor para los botones
         BoxLayout:
             orientation: 'vertical'
-            spacing: dp(15)  # Espaciado entre botones
-            size_hint: None, None
-            size: dp(250), dp(0.8 * root.height)  # Ancho fijo, altura proporcional al 80% de la pantalla
-            pos_hint: {"center_x": 0.55, "top": 1.05}  # Justo debajo del header
+            spacing: dp(15)
+            padding: dp(15)
+            size_hint_y: None
+            height: self.minimum_height
 
-            # Primer botón (Calendario)
-            MDCard:
-                radius: dp(15)
-                size_hint: None, None
-                size: dp(210), dp(110)
-                padding: dp(15)
-                ripple_behavior: True
+            CustomButton:
+                image_source: 'assets/calendario.png'
                 on_release: root.go_to_calendar()
-                md_bg_color: 235 / 255, 208 / 255, 215 / 255, 1  # Color de fondo personalizado
 
-                canvas:
-                    Color:
-                        rgba: 235 / 255, 208 / 255, 215 / 255, 1  # Color de fondo RGB(235, 208, 215)
-                    RoundedRectangle:
-                        pos: self.pos
-                        size: self.size
-                        radius: [15]
-
-                BoxLayout:
-                    orientation: "vertical"
-                    spacing: dp(10)
-                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
-
-                    Image:
-                        source: 'assets/calendario.png'
-                        size_hint: None, None
-                        size: dp(82.59), dp(77)  # Tamaño proporcional de la imagen
-                        pos_hint: {"center_x": 0.5}
-
-            # Segundo botón (Recordatorios)
-            MDCard:
-                radius: dp(15)
-                size_hint: None, None
-                size: dp(210), dp(110)
-                padding: dp(15)
-                ripple_behavior: True
+            CustomButton:
+                image_source: 'assets/recordatorios.png'
                 on_release: root.go_to_reminders()
 
-                canvas:
-                    Color:
-                        rgba: 235 / 255, 208 / 255, 215 / 255, 1  # Color de fondo RGB(235, 208, 215)
-                    RoundedRectangle:
-                        pos: self.pos
-                        size: self.size
-                        radius: [15]
-
-                BoxLayout:
-                    orientation: "vertical"
-                    spacing: dp(10)
-                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
-
-                    Image:
-                        source: 'assets/recordatorios.png'
-                        size_hint: None, None
-                        size: dp(82.59), dp(77)
-                        pos_hint: {"center_x": 0.5}
-
-            # Tercer botón (Pendientes)
-            MDCard:
-                radius: dp(15)
-                size_hint: None, None
-                size: dp(210), dp(110)
-                padding: dp(15)
-                ripple_behavior: True
+            CustomButton:
+                image_source: 'assets/pendientes.png'
                 on_release: root.go_to_pending()
 
-                canvas:
-                    Color:
-                        rgba: 235 / 255, 208 / 255, 215 / 255, 1  # Color de fondo RGB(235, 208, 215)
-                    RoundedRectangle:
-                        pos: self.pos
-                        size: self.size
-                        radius: [15]
-
-                BoxLayout:
-                    orientation: "vertical"
-                    spacing: dp(10)
-                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
-
-                    Image:
-                        source: 'assets/pendientes.png'
-                        size_hint: None, None
-                        size: dp(82.59), dp(77)
-                        pos_hint: {"center_x": 0.5}
-
-            # Cuarto botón (Configuración)
-            MDCard:
-                radius: dp(15)
-                size_hint: None, None
-                size: dp(210), dp(110)
-                padding: dp(15)
-                ripple_behavior: True
-                on_release: root.go_to_settings() 
-
-                canvas:
-                    Color:
-                        rgba: 235 / 255, 208 / 255, 215 / 255, 1  # Color de fondo RGB(235, 208, 215)
-                    RoundedRectangle:
-                        pos: self.pos
-                        size: self.size
-                        radius: [15]
-
-                BoxLayout:
-                    orientation: "vertical"
-                    spacing: dp(10)
-                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
-
-                    Image:
-                        source: 'assets/configuracion.png'
-                        size_hint: None, None
-                        size: dp(82.59), dp(77)
-                        pos_hint: {"center_x": 0.5}
-
+            CustomButton:
+                image_source: 'assets/configuracion.png'
+                on_release: root.go_to_settings()
 
 # Pantalla de Calendario
 <CalendarScreen>:

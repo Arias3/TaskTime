@@ -1,9 +1,17 @@
 from kivymd.app import MDApp
+from kivymd.uix.card import MDCard
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.properties import StringProperty
 from kivy.lang import Builder
 
 # Cargar el archivo KV
 Builder.load_file("design.kv")
+
+class CustomButton(MDCard):
+    image_source = StringProperty()  # Definir el atributo image_source
+    
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
 # Pantalla de inicio
 class MenuScreen(Screen):
