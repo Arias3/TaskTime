@@ -21,4 +21,4 @@ Para instalar y ejecutar TaskTime, sigue estos pasos:
 
 1. Clona el repositorio:
    ```bash
-   git clone https://github.com/tu_usuario/tasktime.git
+   git clone [https://github.com/Arias3/TaskTime.git]
