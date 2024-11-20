@@ -1,13 +1,24 @@
 # TaskTime
-App Desarrollada en python por Angie Teran
 
-# How to run this file 
+TaskTime es una aplicación desarrollada en Python utilizando Kivy y KivyMD, diseñada para gestionar tareas y pendientes. Su objetivo es ayudar a los usuarios a organizar su tiempo de manera eficiente, permitiendo gestionar sus actividades y visualizarlas en un calendario.
 
-inicia un entorno virtual usando el cmd  (copiar y pegar lo siguiente)
+## Descripción
 
-kivy_venv\Scripts\activate
+TaskTime es un gestor de tareas que permite a los usuarios:
+- Añadir, editar y eliminar tareas.
+- Organizar tareas por fecha y prioridad.
+- Visualizar las tareas en un calendario intuitivo.
+- Recibir recordatorios y notificaciones sobre las tareas pendientes.
 
-Selecciona el intérprete Python correcto en VS Code:
+## Tecnologías utilizadas
 
-Presiona Ctrl + Shift + P para abrir la paleta de comandos.
-Escribe "Python: Select Interpreter" y selecciona esta opción.
+- **Lenguaje de programación**: Python
+- **Frameworks**: Kivy, KivyMD
+
+## Instalación
+
+Para instalar y ejecutar TaskTime, sigue estos pasos:
+
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/tu_usuario/tasktime.git
