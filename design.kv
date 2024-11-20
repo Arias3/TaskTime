@@ -142,19 +142,97 @@
 # Pantalla de Recordatorios
 <RemindersScreen>:
     BoxLayout:
-        orientation: "vertical"
-        Label:
-            text: "Pantalla de Recordatorios"
-            font_size: "30sp"
+        orientation: 'vertical'
+
+        # Header
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: dp(15)
+            spacing: dp(15)
             size_hint_y: None
-            height: dp(100)
+            height: dp(80)
+
+            canvas:
+                Color:
+                    rgba: 0.831, 0.506, 0.631, 1  # Color de fondo del header
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [0, 0, 20, 20]
+
+            Image:
+                source: 'assets/logo2.png'
+                size_hint: None, None
+                size: dp(70), dp(70)
+                pos_hint: {"center_y": 0.5}
+
+            Label:
+                text: "RECORDATORIOS"
+                font_size: "30sp"
+                font_name: "assets/TittleRegular.otf"
+                color: 0, 0, 0, 1
+                valign: "middle"
+                halign: "center"
+
+            Button:
+                size_hint: None, None
+                size: dp(70), dp(70)
+                pos_hint: {"center_y": 0.5}
+                on_release: app.root.current = "home"
+                background_normal: 'assets/back.png'
+                background_down: 'assets/back.png'
+
+        # Mensaje introductorio
+        Label:
+            text: "Aquí están tus pendientes:"
+            font_size: "20sp"
+            color: 0, 0, 0, 1
+            size_hint_y: None
+            height: dp(40)
             halign: "center"
-        Button:
-            text: "Regresar"
+            valign: "middle"
+
+        # Lista de recordatorios
+        ScrollView:
+            BoxLayout:
+                id: recordatorios_list
+                orientation: 'vertical'
+                size_hint_y: None
+                height: self.minimum_height
+
+        # Botón flotante para agregar un recordatorio
+        MDFloatingActionButton:
+            icon: 'assets/add.png'
+            pos_hint: {"right": 1, "bottom": 1}
+            on_release: root.manager.current = 'add_recordatorio'
             size_hint: None, None
-            size: dp(200), dp(50)
-            pos_hint: {"center_x": 0.5}
-            on_release: app.root.current = "home"
+            md_bg_color: 0.831, 0.506, 0.631, 1
+            size: dp(56), dp(56)
+            elevation: 4
+
+<AddRecordatorioScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+
+        TextInput:
+            id: titulo
+            hint_text: "Título del recordatorio"
+
+        TextInput:
+            id: descripcion
+            hint_text: "Descripción del recordatorio"
+
+        TextInput:
+            id: fecha
+            hint_text: "Fecha (dd/mm/aaaa)"
+
+        TextInput:
+            id: hora
+            hint_text: "Hora (hh:mm)"
+
+        Button:
+            text: "Agregar Recordatorio"
+            on_release: root.agregar_recordatorio()
 
 # Pantalla de Pendientes
 <PendingScreen>:
