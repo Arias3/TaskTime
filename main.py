@@ -1,13 +1,15 @@
 from kivymd.app import MDApp
 from kivymd.uix.card import MDCard
 from kivymd.uix.label import MDLabel
-from kivymd.uix.button import MDRaisedButton, MDIconButton
+from kivy.core.text import LabelBase
+from kivy.uix.label import Label
+from kivymd.uix.button import MDIconButton
+from kivy.uix.checkbox import CheckBox
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.core.audio import SoundLoader
-from functools import partial
 import uuid  # Para generar claves únicas
 from database import (
     obtener_todos_recordatorios,
@@ -23,6 +25,12 @@ Window.size = (414, 896)  # Ajustar tamaño de la ventana si es necesario
 Window.minimum_width = 414
 Window.minimum_height = 896
 
+# Registrar la fuente personalizada
+LabelBase.register(
+    "TittleRegular",  # Nombre de la fuente
+    "assets/TittleRegular.otf"  # Ruta a la fuente
+)
+
 
 # --- Cargar el archivo KV --- #
 Builder.load_file("design.kv")
@@ -34,7 +42,6 @@ Builder.load_file("design.kv")
 class MenuScreen(Screen):
     def go_to_home(self):
         self.manager.current = "home"
-
 
 # Pantalla de inicio
 class HomeScreen(Screen):
@@ -60,6 +67,15 @@ class RemindersScreen(Screen):
         self.ids.recordatorios_list.clear_widgets()
         self.ids.recordatorios_list.spacing = "20dp"  # Separación entre tarjetas
         recordatorios = obtener_todos_recordatorios()
+        
+        # Verificar si hay recordatorios y mostrar el mensaje si no hay ninguno
+        if not recordatorios:
+            self.mostrar_mensaje_sin_recordatorios()
+            return
+        
+        # Si hay recordatorios, ocultar el mensaje
+        if hasattr(self.ids, 'mensaje_sin_recordatorios'):
+            self.ids.mensaje_sin_recordatorios.opacity = 0
 
         for key, data in recordatorios:
             # Obtenemos los valores directamente sin necesidad de codificación
@@ -72,6 +88,28 @@ class RemindersScreen(Screen):
             card = self.crear_tarjeta(key, titulo, descripcion, fecha, hora)
             self.ids.recordatorios_list.add_widget(card)
 
+    def mostrar_mensaje_sin_recordatorios(self):
+        """Muestra el mensaje cuando no hay recordatorios."""
+        if not hasattr(self.ids, 'mensaje_sin_recordatorios'):
+            # Crear el label si no existe
+            mensaje = MDLabel(
+                text="¡Crea un nuevo recordatorio!",
+                halign="center",
+                font_style="H6",
+                font_size="18sp",
+                theme_text_color="Secondary",
+                size_hint=(None, None),
+                size=("280dp", "40dp"),
+                pos_hint={"center_x": 0.5, "center_y": 0.5}
+            )
+            # Asegurarse de agregar el mensaje al layout correspondiente
+            self.ids.recordatorios_list.add_widget(mensaje)
+            self.ids.mensaje_sin_recordatorios = mensaje  # Guardamos el label en self.ids
+        else:
+            # Si ya existe, solo mostrarlo
+            self.ids.mensaje_sin_recordatorios.opacity = 1
+
+
     def crear_tarjeta(self, key, titulo, descripcion, fecha, hora):
         """Crea una tarjeta con la información del recordatorio."""
         card = MDCard(
@@ -79,104 +117,142 @@ class RemindersScreen(Screen):
             size_hint=(0.95, None),  # Usamos un tamaño relativo
             height="140dp",  # O ajustamos esto con un valor proporcional
             pos_hint={"center_x": 0.5},
-            elevation=3,
+            elevation=2,
             md_bg_color=(235 / 255, 208 / 255, 215 / 255, 1)
         )
 
         # Layout principal
         main_layout = BoxLayout(
             orientation="horizontal",
-            size_hint=(0.95, None),  # Ocupa el 95% del ancho del contenedor padre, altura fija.
-            height="140dp",  # Asegúrate de definir una altura adecuada.
-            padding=[10, 10, 10, 10]  # Espaciado interno.
+            size_hint=(0.95, None),  # Ocupa el 95% del ancho del contenedor padre
+            height="140dp",  # Definir una altura adecuada
+            padding=[10, 10, 10, 10],  # Espaciado interno
+            spacing=10  # Espaciado entre los widgets
         )
 
-        # Botón de completado
-        btn_complete = MDIconButton(
-            icon="assets/completed.png",  # Imagen inicial
-            icon_size="50sp",  # Tamaño del ícono
-            pos_hint={"center_y": 0.5},  # Asegura que el botón esté centrado verticalmente.
-            on_release=lambda instance: self.marcar_completado(instance, card, key)
+        # Función que se llama cuando cambia el estado del checkbox
+        def on_checkbox_active(checkbox, value, key):
+            if value:  # Si el checkbox está marcado
+                print(f"Recordatorio {key} marcado como completado")
+                # Llamamos a marcar_completado
+                self.marcar_completado(checkbox, value, key)
+            else:  # Si el checkbox está desmarcado
+                print(f"Recordatorio {key} desmarcado")
+                # Puedes manejar la lógica para cuando el checkbox esté desmarcado
+
+        # Crear el checkbox
+        checkbox_complete = CheckBox(
+            size_hint=(None, None),
+            size=("60dp", "60dp"),
+            pos_hint={"center_y": 0.5},
+            active=False  # El checkbox comienza desmarcado
         )
 
-        # Añadimos el botón a un BoxLayout para centrarlo verticalmente
-        btn_layout = BoxLayout(
-            orientation="vertical",
-            size_hint=(None, 1),  # No cambia el ancho; ocupa todo el alto del main_layout.
-            width="60dp",  # Ancho fijo para el layout del botón.
-        )
-        btn_layout.add_widget(btn_complete)
+        # Asignar imágenes personalizadas para los estados
+        checkbox_complete.background_checkbox_normal = 'assets/inactivo.png'  # Imagen para estado desmarcado
+        checkbox_complete.background_checkbox_down = 'assets/activo.png'  # Imagen para estado marcado
 
-        # Agregamos el layout del botón al layout principal
-        main_layout.add_widget(btn_layout)
+        # Conectar el cambio de estado del checkbox a la función on_checkbox_active
+        checkbox_complete.bind(active=lambda instance, value: on_checkbox_active(instance, value, key))
+
+        # Agregar el checkbox al layout
+        main_layout.add_widget(checkbox_complete)
+
 
         # Información del recordatorio
-        info_layout = BoxLayout(orientation="vertical", size_hint=(0.75, 1), padding="4dp", spacing="4dp")
+        info_layout = BoxLayout(
+            orientation="vertical", 
+            size_hint=(0.75, 1),  # Ocupa el 75% del ancho del contenedor padre
+            padding="4dp", 
+            spacing="4dp"
+        )
         info_layout.add_widget(
-            MDLabel(
+            Label(
                 text=f"{titulo}", 
-                font_style="H5",  # Titulo más grande
+                font_size="25sp",
                 halign="center", 
-                font_name="assets/TittleRegular.otf"  # Usando la fuente personalizada
+                font_name="assets/TittleRegular.otf",  # Usando la fuente personalizada
+                color=(0, 0, 0, 1),
+                text_size=(None, None),
             )
         )
         info_layout.add_widget(
             MDLabel(
                 text=f"Fecha: {fecha} | Hora: {hora}", 
                 halign="center", 
-                font_style="H6",
-                font_size="15sp"  # Aumentar tamaño de fuente
+                font_style="Subtitle1",
+                font_size="18sp"  # Aumentar tamaño de fuente
+
             )
         )
+
+        # Añadimos el layout de información al layout principal
         main_layout.add_widget(info_layout)
 
         # Botones de acción
-        action_layout = BoxLayout(orientation="vertical", size_hint=(None, 1), width="40dp", padding="5dp", spacing="5dp")
+        action_layout = BoxLayout(
+            orientation="vertical", 
+            size_hint=(None, 1), 
+            width="40dp", 
+            padding="5dp", 
+            spacing="5dp"
+        )
         btn_edit = MDIconButton(
             icon="assets/edit.png",
-            icon_size="38sp",  # Hacer los íconos más grandes
+            icon_size="38sp",  # Íconos más grandes
             on_release=lambda _: self.ir_a_editar(key),
         )
         btn_details = MDIconButton(
             icon="assets/details.png",
-            icon_size="38sp",  # Hacer los íconos más grandes
+            icon_size="38sp",  # Íconos más grandes
             on_release=lambda _: self.toggle_details(card, descripcion),
         )
         action_layout.add_widget(btn_edit)
         action_layout.add_widget(btn_details)
+
+        # Añadimos los botones al layout principal
         main_layout.add_widget(action_layout)
 
         # Añadimos el layout principal a la tarjeta
         card.add_widget(main_layout)
+
         
         return card
 
-
-
-
-    def marcar_completado(self, instance, card, key):
-        """Marca el recordatorio como completado, cambia el icono, elimina el recordatorio y recarga la lista."""
+    # Definimos la función para marcar como completado o desmarcar
+    def marcar_completado(self, instance, value, key):
+        """Marca el recordatorio como completado o desmarcado, cambia el icono y elimina el recordatorio si es completado."""
         
-        # Cambiar la imagen del botón de completado
-        instance.icon = "assets/completed2.png"  # Cambiar el icono a completado
+        if value:  # Si el checkbox está marcado
+            print(f"Recordatorio {key} marcado como completado")
 
-        # Cargar y reproducir el sonido de campana
-        sonido_completado = SoundLoader.load('assets/campana.wav')
-        if sonido_completado:
-            sonido_completado.play()  # Reproducir el sonido
+            # Cargar y reproducir el sonido de campana
+            sonido_completado = SoundLoader.load('assets/campana.wav')
+            if sonido_completado:
+                sonido_completado.play()  # Reproducir el sonido
 
-        # Función para eliminar el recordatorio después de un pequeño retraso
-        def eliminar_con_retraso(*args):
-            # Eliminar el recordatorio de la base de datos
-            print(f"Eliminando recordatorio con clave: {key}")
-            if eliminar_recordatorio(key):  # Llamada a la función de eliminar en database.py
-                print(f"Recordatorio {key} eliminado de la base de datos.")
+            # Función para eliminar el recordatorio después de un pequeño retraso
+            def eliminar_con_retraso(*args):
+                # Eliminar el recordatorio de la base de datos
+                if eliminar_recordatorio(key):
+                    print(f"Recordatorio {key} eliminado de la base de datos.")
+                
+                # Recargar los recordatorios después de la eliminación y mostrar mensaje si no hay recordatorios
+                self.load_recordatorios()
 
-            # Recargar los recordatorios después de la eliminación
-            self.load_recordatorios()
+                # Comprobar si después de recargar hay recordatorios y mostrar el mensaje
+                if not obtener_todos_recordatorios():  # Comprobar si no hay recordatorios
+                    self.mostrar_mensaje_sin_recordatorios()  # Mostrar mensaje si no hay recordatorios
+                else:
+                    # Si hay recordatorios, asegurarse de que el mensaje esté oculto
+                    if hasattr(self.ids, 'mensaje_sin_recordatorios'):
+                        self.ids.mensaje_sin_recordatorios.opacity = 0
 
-        # Programar la ejecución de la función de eliminación con un retraso de 1 segundo
-        Clock.schedule_once(eliminar_con_retraso, 1)  # 1 segundo de retraso
+            # Programar la ejecución de la función de eliminación con un retraso de 1 segundo
+            Clock.schedule_once(eliminar_con_retraso, 1)  # 1 segundo de retraso
+        else:
+            print(f"Recordatorio {key} desmarcado")
+            # Aquí puedes manejar el caso en que se desmarque el checkbox si es necesario
     
     def toggle_details(self, card, descripcion):
         """Muestra u oculta la descripción completa del recordatorio."""
