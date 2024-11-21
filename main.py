@@ -31,10 +31,8 @@ LabelBase.register(
     "assets/TittleRegular.otf"  # Ruta a la fuente
 )
 
-
 # --- Cargar el archivo KV --- #
 Builder.load_file("design.kv")
-
 
 # --- Pantallas de la aplicación --- #
 
@@ -127,11 +125,11 @@ class RemindersScreen(Screen):
             size_hint=(0.95, None),  # Ocupa el 95% del ancho del contenedor padre
             height="140dp",  # Definir una altura adecuada
             padding=[10, 10, 10, 10],  # Espaciado interno
-            spacing=10  # Espaciado entre los widgets
+            spacing= 8,  # Espaciado entre los widgets
         )
 
         # Función que se llama cuando cambia el estado del checkbox
-        def on_checkbox_active(checkbox, value, key):
+        def on_checkbox_complete(checkbox, value, key):
             if value:  # Si el checkbox está marcado
                 print(f"Recordatorio {key} marcado como completado")
                 # Llamamos a marcar_completado
@@ -152,8 +150,8 @@ class RemindersScreen(Screen):
         checkbox_complete.background_checkbox_normal = 'assets/inactivo.png'  # Imagen para estado desmarcado
         checkbox_complete.background_checkbox_down = 'assets/activo.png'  # Imagen para estado marcado
 
-        # Conectar el cambio de estado del checkbox a la función on_checkbox_active
-        checkbox_complete.bind(active=lambda instance, value: on_checkbox_active(instance, value, key))
+        # Conectar el cambio de estado del checkbox a la función on checkbox_complete
+        checkbox_complete.bind(active=lambda instance, value: on_checkbox_complete(instance, value, key))
 
         # Agregar el checkbox al layout
         main_layout.add_widget(checkbox_complete)
@@ -202,20 +200,33 @@ class RemindersScreen(Screen):
             icon_size="38sp",  # Íconos más grandes
             on_release=lambda _: self.ir_a_editar(key),
         )
-        btn_details = MDIconButton(
-            icon="assets/details.png",
-            icon_size="38sp",  # Íconos más grandes
-            on_release=lambda _: self.toggle_details(card, descripcion),
-        )
         action_layout.add_widget(btn_edit)
-        action_layout.add_widget(btn_details)
 
+        # Crear el checkbox para los detalles
+        checkbox_details = CheckBox(
+            size_hint=(None, None),
+            size=("50dp", "50dp"),
+            pos_hint={"center_y": 0.5},
+            active=False  # El checkbox comienza desmarcado
+        )
+
+        # Asignar imágenes personalizadas para los estados del checkbox
+        checkbox_details.background_checkbox_normal = 'assets/details.png'  # Imagen para estado desmarcado
+        checkbox_details.background_checkbox_down = 'assets/details2.png'  # Imagen para estado marcado
+
+        # Conectar el cambio de estado del checkbox a la función on_checkbox_details
+        checkbox_details.bind(
+            active=lambda instance, value: self.on_checkbox_details(instance, value, key, card, descripcion)
+        )
+
+        # Agregar el checkbox al layout de acción
+        action_layout.add_widget(checkbox_details)
+        
         # Añadimos los botones al layout principal
         main_layout.add_widget(action_layout)
 
         # Añadimos el layout principal a la tarjeta
         card.add_widget(main_layout)
-
         
         return card
 
@@ -254,18 +265,62 @@ class RemindersScreen(Screen):
             print(f"Recordatorio {key} desmarcado")
             # Aquí puedes manejar el caso en que se desmarque el checkbox si es necesario
     
-    def toggle_details(self, card, descripcion):
+     # Función que se llama cuando cambia el estado del checkbox para detalles
+    
+    def on_checkbox_details(self,checkbox, value, key, card, descripcion):
+        """Activa o desactiva los detalles según el estado del checkbox."""
+        if value:  # Si el checkbox está marcado
+            print(f"Detalles activados para {key}")
+            self.toggle_details(card, descripcion, activar=True)
+        else:  # Si el checkbox está desmarcado
+            print(f"Detalles desactivados para {key}")
+            self.toggle_details(card, descripcion, activar=False)
+
+    # Función para mostrar u ocultar los detalles
+    def toggle_details(self, card, descripcion, activar=True):
         """Muestra u oculta la descripción completa del recordatorio."""
-        if "detalles" in [w.text for w in card.children if isinstance(w, MDLabel)]:
-            card.size = ("400dp", "110dp")
-            for widget in card.children:
-                if isinstance(widget, MDLabel) and widget.text.startswith("Detalles:"):
+        
+        # Obtener los detalles existentes si ya están visibles
+        detalles_existentes = [w for w in card.children if isinstance(w, MDLabel) and w.text.startswith("Detalles:")]
+        
+        if activar:  # Mostrar los detalles
+            if not detalles_existentes:  # Si no están ya visibles
+               
+                # Crear el label para los detalles
+                detalles_label = MDLabel(
+                    text=f"[b]Detalles:[/b] {descripcion}",
+                    halign="left",
+                    font_style="Subtitle1",  # Mantén el tamaño de la fuente
+                    font_name="assets/TittleRegular.otf",  # Fuente personalizada
+                    size_hint_y=None,  # Permitir que la altura sea dinámica
+                    markup=True,  # Permitir etiquetas de formato
+                )
+
+                # Ajustar el tamaño del texto y calcular la altura automáticamente
+                detalles_label.text_size = (card.width - 20, None)  # Limitar el ancho al tamaño de la tarjeta con márgenes
+                detalles_label.height = detalles_label.texture_size[1]  # Usar el tamaño del texto renderizado
+                detalles_label.padding = [10, 20]  # Aplicar padding
+
+                # Aumentar el tamaño de la tarjeta si se muestran los detalles
+                card.height = 140 + detalles_label.height + 20  # Altura base + altura del texto + margen adicional
+                
+                # Añadir el label con los detalles al final del card
+                card.add_widget(detalles_label)
+
+                # Guardar el widget en la lista para poder eliminarlo después
+                self.detalles_existentes = [detalles_label]  # Guarda el label añadido
+
+        else:  # Ocultar los detalles
+            if hasattr(self, 'detalles_existentes') and self.detalles_existentes:  # Si existen detalles
+                # Reducir el tamaño de la tarjeta cuando se ocultan los detalles
+                card.height = 140  # Puedes ajustar esta altura según la altura inicial
+
+                # Eliminar los widgets de detalles
+                for widget in self.detalles_existentes:
                     card.remove_widget(widget)
-        else:
-            card.size = ("400dp", "180dp")
-            card.add_widget(
-                MDLabel(text=f"Detalles: {descripcion}", halign="left", font_style="Caption")
-            )
+
+                # Limpiar la lista de detalles
+                del self.detalles_existentes  # Eliminar la variable que contiene los detalles
 
     def ir_a_editar(self, key):
         """Navega a la pantalla de edición para el recordatorio."""
