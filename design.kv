@@ -24,7 +24,7 @@
         MDLabel:
             text: "¡BIENVENIDO A TASKTIME!"
             halign: "center"
-            font_style: "H5"
+            font_style: "H4"
             font_name: "assets/TittleRegular.otf"  # Fuente personalizada
             text_color: 0, 0, 0, 1  # Color del texto (negro)
 
@@ -47,22 +47,23 @@
     image_source: ''  # Definir la propiedad de imagen
     radius: dp(15)
     size_hint: None, None
-    size: dp(210), dp(110)
-    padding: dp(15)
+    size: dp(220), dp(140)  # Tamaño más proporcional
+    padding: dp(10)
     ripple_behavior: True
     md_bg_color: 235 / 255, 208 / 255, 215 / 255, 1  # Color de fondo personalizado
     pos_hint: {"center_x": 0.5}  # Centra horizontalmente el MDCard
 
     BoxLayout:
         orientation: "vertical"
-        spacing: dp(10)
+        spacing: dp(8)  # Espaciado reducido para un diseño más compacto
         pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
         Image:
             source: root.image_source  # Utiliza la propiedad image_source
             size_hint: None, None
-            size: dp(82.59), dp(77)
-            pos_hint: {"center_x": 0.5}
+            size: dp(106), dp(100)  # Tamaño ajustado de la imagen
+            pos_hint: {"center_x": 0.5}  # Centra la imagen horizontalmente
+
 
 <HomeScreen>:
     BoxLayout:
@@ -143,7 +144,6 @@
 <RemindersScreen>:
     BoxLayout:
         orientation: 'vertical'
-
         # Header
         BoxLayout:
             orientation: 'horizontal'
@@ -182,33 +182,77 @@
                 background_normal: 'assets/back.png'
                 background_down: 'assets/back.png'
 
-        # Mensaje introductorio
-        Label:
-            text: "Aquí están tus pendientes:"
-            font_size: "20sp"
-            color: 0, 0, 0, 1
-            size_hint_y: None
-            height: dp(40)
-            halign: "center"
-            valign: "middle"
+        # Contenedor con el ScrollView y el botón flotante
+        FloatLayout:
+            # ScrollView para la lista de recordatorios
+            ScrollView:
+                BoxLayout:
+                    id: recordatorios_list
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: self.minimum_height
+                    spacing: dp(30)  # Aumento de separación entre los cards
+                    padding: [dp(10), dp(20), dp(10), dp(0)]
+                    # Lista de recordatorios
+                    BoxLayout:
+                        orientation: 'vertical'
+                        size_hint_y: None
+                        height: self.minimum_height
+                        spacing: dp(30)
 
-        # Lista de recordatorios
-        ScrollView:
-            BoxLayout:
-                id: recordatorios_list
-                orientation: 'vertical'
-                size_hint_y: None
-                height: self.minimum_height
+            # Botón flotante en la esquina inferior
+            MDFloatingActionButton:
+                icon: 'assets/add.png'
+                pos_hint: {"right": 0.95}
+                y:dp(20)
+                on_release: root.manager.current = 'add_recordatorio'
+                size_hint: None, None
+                md_bg_color: 0.831, 0.506, 0.631, 1
+                size: dp(58), dp(58)
+                elevation: 4
+                keep_on_top: True
 
-        # Botón flotante para agregar un recordatorio
-        MDFloatingActionButton:
-            icon: 'assets/add.png'
-            pos_hint: {"right": 1, "bottom": 1}
-            on_release: root.manager.current = 'add_recordatorio'
-            size_hint: None, None
-            md_bg_color: 0.831, 0.506, 0.631, 1
-            size: dp(56), dp(56)
-            elevation: 4
+
+
+
+
+<EditarTareaScreen>:
+    name: "editar_tarea"
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: "16dp"
+        spacing: "8dp"
+
+        MDTextField:
+            id: editar_titulo
+            hint_text: "Título"
+            mode: "rectangle"
+
+        MDTextField:
+            id: editar_descripcion
+            hint_text: "Descripción"
+            mode: "rectangle"
+
+        MDTextField:
+            id: editar_fecha
+            hint_text: "Fecha (DD/MM/AAAA)"
+            mode: "rectangle"
+
+        MDTextField:
+            id: editar_hora
+            hint_text: "Hora (HH:MM)"
+            mode: "rectangle"
+
+        MDRaisedButton:
+            text: "Guardar Cambios"
+            pos_hint: {"center_x": 0.5}
+            on_release: root.actualizar_recordatorio()
+
+        MDRaisedButton:
+            text: "Cancelar"
+            pos_hint: {"center_x": 0.5}
+            on_release: app.root.current = "reminders"
 
 <AddRecordatorioScreen>:
     BoxLayout:
