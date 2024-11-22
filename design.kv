@@ -213,70 +213,303 @@
                 keep_on_top: True
 
 
-
-
-
+#Pantalla para Editar Recordatorios
 <EditarTareaScreen>:
-    name: "editar_tarea"
-
-    BoxLayout:
-        orientation: "vertical"
-        padding: "16dp"
-        spacing: "8dp"
-
-        MDTextField:
-            id: editar_titulo
-            hint_text: "Título"
-            mode: "rectangle"
-
-        MDTextField:
-            id: editar_descripcion
-            hint_text: "Descripción"
-            mode: "rectangle"
-
-        MDTextField:
-            id: editar_fecha
-            hint_text: "Fecha (DD/MM/AAAA)"
-            mode: "rectangle"
-
-        MDTextField:
-            id: editar_hora
-            hint_text: "Hora (HH:MM)"
-            mode: "rectangle"
-
-        MDRaisedButton:
-            text: "Guardar Cambios"
-            pos_hint: {"center_x": 0.5}
-            on_release: root.actualizar_recordatorio()
-
-        MDRaisedButton:
-            text: "Cancelar"
-            pos_hint: {"center_x": 0.5}
-            on_release: app.root.current = "reminders"
-
-<AddRecordatorioScreen>:
     BoxLayout:
         orientation: 'vertical'
 
-        TextInput:
-            id: titulo
-            hint_text: "Título del recordatorio"
+        # Header con logo y título
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: dp(15)
+            spacing: dp(15)
+            size_hint_y: None
+            height: dp(80)
+            canvas:
+                Color:
+                    rgba: 0.831, 0.506, 0.631, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [0, 0, 20, 20]
 
-        TextInput:
-            id: descripcion
-            hint_text: "Descripción del recordatorio"
+            Image:
+                source: 'assets/logo2.png'
+                size_hint: None, None
+                size: dp(70), dp(70)
+                pos_hint: {"center_y": 0.5}
 
-        TextInput:
-            id: fecha
-            hint_text: "Fecha (dd/mm/aaaa)"
+            Label:
+                text: "Editar Recordatorio"
+                font_size: "24sp"
+                font_name: "assets/TittleRegular.otf"
+                color: 0, 0, 0, 1
+                valign: "middle"
+                halign: "center"
 
-        TextInput:
-            id: hora
-            hint_text: "Hora (hh:mm)"
+            Button:
+                size_hint: None, None
+                size: dp(70), dp(70)
+                pos_hint: {"center_y": 0.5}
+                on_release: app.root.current = "reminders"
+                background_normal: 'assets/back.png'
+                background_down: 'assets/back.png'
 
-        Button:
-            text: "Agregar Recordatorio"
-            on_release: root.agregar_recordatorio()
+        # Espacio entre el header y el formulario
+        Widget:
+            size_hint_y: 0.1
+
+        # Formulario de entrada de datos
+        BoxLayout:
+            orientation: "vertical"
+            spacing: "20dp"
+            padding: "10dp"
+
+            MDCard:
+                size_hint_y: None
+                height: "100dp"
+                padding: "10dp"
+                radius: [15, 15, 15, 15]
+                md_bg_color: 1, 1, 1, 1
+
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Color negro para el borde
+                    Line:
+                        width: 1.5  # Ancho del borde
+                        rounded_rectangle: self.x, self.y, self.width, self.height, 15  # Contorno redondeado
+
+                TextInput:
+                    id: editar_titulo
+                    hint_text: "Título del recordatorio"
+                    multiline: True  # Permitir varias líneas
+                    size_hint_y: None
+                    height: "80dp"
+                    font_size: "16sp"
+                    background_color: 0, 0, 0, 0
+                    foreground_color: 0, 0, 0, 1
+                    hint_text_color: 0.5, 0.5, 0.5, 1
+                    padding: [10, 10, 10, 10]
+                    on_text: self.text = self.text[:40]  # Limitar a 40 caracteres
+
+            MDCard:
+                size_hint_y: None
+                height: "150dp"
+                padding: "10dp"
+                radius: [15, 15, 15, 15]
+                md_bg_color: 1, 1, 1, 1
+
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1
+                    Line:
+                        width: 1.5
+                        rounded_rectangle: self.x, self.y, self.width, self.height, 15
+
+                TextInput:
+                    id: editar_descripcion
+                    hint_text: "Descripción del recordatorio"
+                    multiline: True
+                    size_hint_y: None
+                    height: "140dp"
+                    font_size: "16sp"
+                    background_color: 0, 0, 0, 0
+                    foreground_color: 0, 0, 0, 1
+                    hint_text_color: 0.5, 0.5, 0.5, 1
+                    padding: [10, 10, 10, 10]
+
+            MDTextField:
+                id: editar_fecha
+                hint_text: "Fecha (dd/mm/yyyy)"
+                mode: "rectangle"
+                size_hint_y: None
+                height: "40dp"
+                on_focus: root.show_date_picker(self.focus)
+
+            MDTextField:
+                id: editar_hora
+                hint_text: "Hora (hh:mm)"
+                mode: "rectangle"
+                size_hint_y: None
+                height: "40dp"
+                on_focus: root.show_time_picker(self.focus)
+
+        # Espacio entre el formulario y los botones
+        Widget:
+            size_hint_y: 0.25
+
+        # Botón en la parte inferior
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: "20dp"
+            padding: "20dp"
+            size_hint_y: None
+            height: dp(80)
+            pos_hint: {"center_x": 0.5}
+
+            MDRaisedButton:
+                text: "GUARDAR"
+                font_size: "30sp"
+                size_hint: None, None
+                size: dp(400), dp(80)
+                pos_hint: {"center_x": 0.5}
+                md_bg_color: 0.831, 0.506, 0.631, 1
+                text_color: 0, 0, 0, 1
+                font_name: "assets/TittleRegular.otf"
+                on_release: root.actualizar_recordatorio()
+
+        Widget:
+            size_hint_y: 0.1
+
+
+#Pantalla para agregar Recordatorios
+<AddRecordatorioScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        
+        # Header con logo y título
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: dp(15)
+            spacing: dp(15)
+            size_hint_y: None
+            height: dp(80)
+            canvas:
+                Color:
+                    rgba: 0.831, 0.506, 0.631, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [0, 0, 20, 20]
+
+            Image:
+                source: 'assets/logo2.png'
+                size_hint: None, None
+                size: dp(70), dp(70)
+                pos_hint: {"center_y": 0.5}
+
+            Label:
+                text: "Nuevo Recordatorio"
+                font_size: "24sp"
+                font_name: "assets/TittleRegular.otf"
+                color: 0, 0, 0, 1
+                valign: "middle"
+                halign: "center"
+
+            Button:
+                size_hint: None, None
+                size: dp(70), dp(70)
+                pos_hint: {"center_y": 0.5}
+                on_release: app.root.current = "reminders"
+                background_normal: 'assets/back.png'
+                background_down: 'assets/back.png'
+
+        # Espacio entre el header y el formulario
+        Widget:
+            size_hint_y: 0.1
+
+        # Formulario de entrada de datos
+        BoxLayout:
+            orientation: "vertical"
+            spacing: "20dp"
+            padding: "10dp"
+
+            MDCard:
+                size_hint_y: None
+                height: "100dp"
+                padding: "10dp"
+                radius: [15, 15, 15, 15]
+                md_bg_color: 1, 1, 1, 1
+
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Color negro para el borde
+                    Line:
+                        width: 1.5  # Ancho del borde
+                        rounded_rectangle: self.x, self.y, self.width, self.height, 15  # Contorno redondeado
+
+                TextInput:
+                    id: titulo
+                    hint_text: "Título del recordatorio"
+                    multiline: True  # Permitir varias líneas
+                    size_hint_y: None
+                    height: "80dp"
+                    font_size: "16sp"
+                    background_color: 0, 0, 0, 0
+                    foreground_color: 0, 0, 0, 1
+                    hint_text_color: 0.5, 0.5, 0.5, 1
+                    padding: [10, 10, 10, 10]
+                    on_text: self.text = self.text[:25]  # Limitar a 40 caracteres
+
+
+            MDCard:
+                size_hint_y: None
+                height: "150dp"  # Altura ajustada para texto en párrafos
+                padding: "10dp"
+                radius: [15, 15, 15, 15]  # Bordes redondeados
+                md_bg_color: 1, 1, 1, 1  # Fondo blanco
+
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Color negro para el borde
+                    Line:
+                        width: 1.5  # Ancho del borde
+                        rounded_rectangle: self.x, self.y, self.width, self.height, 15  # Contorno redondeado
+
+                TextInput:
+                    id: descripcion
+                    hint_text: "Descripción del recordatorio"
+                    multiline: True  # Permitir texto en varias líneas
+                    size_hint_y: None
+                    height: "140dp"  # Altura dentro del MDCard
+                    font_size: "16sp"
+                    background_color: 0, 0, 0, 0  # Fondo transparente para heredar el de MDCard
+                    foreground_color: 0, 0, 0, 1  # Color del texto (negro)
+                    hint_text_color: 0.5, 0.5, 0.5, 1  # Color del texto de ayuda
+                    padding: [10, 10, 10, 10]
+
+            MDTextField:
+                id: fecha
+                hint_text: "Fecha (dd/mm/yyyy)"
+                mode: "rectangle"
+                size_hint_y: None
+                height: "40dp"
+                on_focus: root.show_date_picker(self.focus)
+
+            MDTextField:
+                id: hora
+                hint_text: "Hora (hh:mm)"
+                mode: "rectangle"
+                size_hint_y: None
+                height: "40dp"
+                on_focus: root.show_time_picker(self.focus)
+
+        # Espacio entre el formulario y los botones
+        Widget:
+            size_hint_y: 0.25
+
+        # Botón en la parte inferior
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: "20dp"
+            padding: "20dp"
+            size_hint_y: None
+            height: dp(80)  # Altura ajustada para hacer el botón más grande
+            pos_hint: {"center_x": 0.5}
+
+            MDRaisedButton:
+                text: "AGREGAR"
+                font_size:"30sp"
+                size_hint: None, None
+                size: dp(400), dp(80)  # Tamaño aumentado del botón
+                pos_hint: {"center_x": 0.5}
+                md_bg_color: 0.831, 0.506, 0.631, 1  # Color de fondo del botón
+                text_color: 0, 0, 0, 1  # Letras negras
+                font_name: "assets/TittleRegular.otf"
+                on_release: root.agregar_recordatorio()
+        Widget:
+            size_hint_y: 0.1
+
 
 # Pantalla de Pendientes
 <PendingScreen>:

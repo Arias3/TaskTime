@@ -6,11 +6,15 @@ from kivy.uix.label import Label
 from kivymd.uix.button import MDIconButton
 from kivy.uix.checkbox import CheckBox
 from kivy.uix.boxlayout import BoxLayout
+from kivymd.uix.pickers import MDDatePicker, MDTimePicker
+from kivymd.uix.screen import MDScreen
+from kivy.metrics import dp
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.core.audio import SoundLoader
 import uuid  # Para generar claves únicas
+import math
 from database import (
     obtener_todos_recordatorios,
     agregar_recordatorio,
@@ -35,12 +39,10 @@ LabelBase.register(
 Builder.load_file("design.kv")
 
 # --- Pantallas de la aplicación --- #
-
 # Pantalla del menú principal
 class MenuScreen(Screen):
     def go_to_home(self):
         self.manager.current = "home"
-
 # Pantalla de inicio
 class HomeScreen(Screen):
     def go_to_calendar(self):
@@ -54,7 +56,6 @@ class HomeScreen(Screen):
 
     def go_to_settings(self):
         self.manager.current = "settings"
-
 # Pantalla de recordatorios
 class RemindersScreen(Screen):
     def on_enter(self):
@@ -110,25 +111,34 @@ class RemindersScreen(Screen):
 
     def crear_tarjeta(self, key, titulo, descripcion, fecha, hora):
         """Crea una tarjeta con la información del recordatorio."""
+        # Tarjeta principal
         card = MDCard(
             orientation="vertical",
-            size_hint=(0.95, None),  # Usamos un tamaño relativo
-            height="140dp",  # O ajustamos esto con un valor proporcional
+            size_hint=(0.95, None),
+            height="140dp",  # Altura inicial
             pos_hint={"center_x": 0.5},
             elevation=2,
             md_bg_color=(235 / 255, 208 / 255, 215 / 255, 1)
         )
 
-        # Layout principal
-        main_layout = BoxLayout(
-            orientation="horizontal",
-            size_hint=(0.95, None),  # Ocupa el 95% del ancho del contenedor padre
-            height="140dp",  # Definir una altura adecuada
-            padding=[10, 10, 10, 10],  # Espaciado interno
-            spacing= 8,  # Espaciado entre los widgets
+        # Layout principal vertical (contiene todo el contenido)
+        container_layout = BoxLayout(
+            orientation="vertical",
+            size_hint=(1, None),  # Tamaño relativo horizontal y altura dinámica
+            spacing="10dp",
+            padding="10dp",
         )
 
-        # Función que se llama cuando cambia el estado del checkbox
+        # Layout horizontal para el contenido principal
+        main_layout = BoxLayout(
+            orientation="horizontal",
+            size_hint=(1, None),  # Ocupa todo el ancho del contenedor
+            height="100dp",  # Altura inicial adecuada para el contenido principal
+            padding="10dp",
+            spacing=8,
+        )
+
+         # Función que se llama cuando cambia el estado del checkbox
         def on_checkbox_complete(checkbox, value, key):
             if value:  # Si el checkbox está marcado
                 print(f"Recordatorio {key} marcado como completado")
@@ -156,79 +166,86 @@ class RemindersScreen(Screen):
         # Agregar el checkbox al layout
         main_layout.add_widget(checkbox_complete)
 
-
-        # Información del recordatorio
+        # Layout de información del recordatorio
         info_layout = BoxLayout(
-            orientation="vertical", 
-            size_hint=(0.75, 1),  # Ocupa el 75% del ancho del contenedor padre
-            padding="4dp", 
-            spacing="4dp"
+            orientation="vertical",
+            size_hint=(0.75, 1),
+            spacing="4dp",
         )
         info_layout.add_widget(
             Label(
-                text=f"{titulo}", 
+                text=titulo,
                 font_size="25sp",
-                halign="center", 
-                font_name="assets/TittleRegular.otf",  # Usando la fuente personalizada
+                halign="center",
+                font_name="assets/TittleRegular.otf",
                 color=(0, 0, 0, 1),
                 text_size=(None, None),
             )
         )
         info_layout.add_widget(
             MDLabel(
-                text=f"Fecha: {fecha} | Hora: {hora}", 
-                halign="center", 
+                text="Vence en: [b]" + f"{fecha}" + "[/b]\n      " + f"{hora}",
+                halign="center",
                 font_style="Subtitle1",
-                font_size="18sp"  # Aumentar tamaño de fuente
-
+                font_size="18sp",
+                markup=True
             )
         )
 
-        # Añadimos el layout de información al layout principal
+        # Añadir el layout de información al layout principal
         main_layout.add_widget(info_layout)
 
-        # Botones de acción
+        # Layout para los botones de acción
         action_layout = BoxLayout(
-            orientation="vertical", 
-            size_hint=(None, 1), 
-            width="40dp", 
-            padding="5dp", 
-            spacing="5dp"
+            orientation="vertical",
+            size_hint=(None, 1),
+            width="40dp",
+            spacing="5dp",
         )
         btn_edit = MDIconButton(
             icon="assets/edit.png",
-            icon_size="38sp",  # Íconos más grandes
+            icon_size="38sp",
             on_release=lambda _: self.ir_a_editar(key),
         )
         action_layout.add_widget(btn_edit)
 
-        # Crear el checkbox para los detalles
+        # Checkbox para los detalles
         checkbox_details = CheckBox(
             size_hint=(None, None),
             size=("50dp", "50dp"),
             pos_hint={"center_y": 0.5},
-            active=False  # El checkbox comienza desmarcado
+            active=False,
         )
 
-        # Asignar imágenes personalizadas para los estados del checkbox
-        checkbox_details.background_checkbox_normal = 'assets/details.png'  # Imagen para estado desmarcado
-        checkbox_details.background_checkbox_down = 'assets/details2.png'  # Imagen para estado marcado
+        # Asignar imágenes personalizadas
+        checkbox_details.background_checkbox_normal = 'assets/details.png'
+        checkbox_details.background_checkbox_down = 'assets/details2.png'
 
-        # Conectar el cambio de estado del checkbox a la función on_checkbox_details
+        # Conectar el cambio de estado al layout de detalles
         checkbox_details.bind(
-            active=lambda instance, value: self.on_checkbox_details(instance, value, key, card, descripcion)
+            active=lambda instance, value: self.toggle_details(details_layout, descripcion, card, value)
         )
-
-        # Agregar el checkbox al layout de acción
         action_layout.add_widget(checkbox_details)
-        
-        # Añadimos los botones al layout principal
+
+        # Añadir los botones de acción al layout principal
         main_layout.add_widget(action_layout)
 
-        # Añadimos el layout principal a la tarjeta
-        card.add_widget(main_layout)
-        
+        # Añadir el layout principal horizontal al contenedor vertical
+        container_layout.add_widget(main_layout)
+
+        # Layout para los detalles (inicialmente oculto)
+        details_layout = BoxLayout(
+            orientation="vertical",
+            size_hint=(1, None),  # Tamaño relativo horizontal y altura dinámica
+            height=0  # Altura inicial cero para que no desplace otros elementos
+        )
+        container_layout.add_widget(details_layout)
+
+        # Añadir el contenedor completo a la tarjeta
+        card.add_widget(container_layout)
+
         return card
+
 
     # Definimos la función para marcar como completado o desmarcar
     def marcar_completado(self, instance, value, key):
@@ -266,7 +283,6 @@ class RemindersScreen(Screen):
             # Aquí puedes manejar el caso en que se desmarque el checkbox si es necesario
     
      # Función que se llama cuando cambia el estado del checkbox para detalles
-    
     def on_checkbox_details(self,checkbox, value, key, card, descripcion):
         """Activa o desactiva los detalles según el estado del checkbox."""
         if value:  # Si el checkbox está marcado
@@ -275,57 +291,59 @@ class RemindersScreen(Screen):
         else:  # Si el checkbox está desmarcado
             print(f"Detalles desactivados para {key}")
             self.toggle_details(card, descripcion, activar=False)
-
     # Función para mostrar u ocultar los detalles
-    def toggle_details(self, card, descripcion, activar=True):
+    def toggle_details(self, details_layout, descripcion, card, activar=True):
         """Muestra u oculta la descripción completa del recordatorio."""
-        
-        # Obtener los detalles existentes si ya están visibles
-        detalles_existentes = [w for w in card.children if isinstance(w, MDLabel) and w.text.startswith("Detalles:")]
-        
         if activar:  # Mostrar los detalles
-            if not detalles_existentes:  # Si no están ya visibles
-               
-                # Crear el label para los detalles
+            if not details_layout.children:  # Solo agregar si no están visibles
                 detalles_label = MDLabel(
                     text=f"[b]Detalles:[/b] {descripcion}",
                     halign="left",
-                    font_style="Subtitle1",  # Mantén el tamaño de la fuente
-                    font_name="assets/TittleRegular.otf",  # Fuente personalizada
-                    size_hint_y=None,  # Permitir que la altura sea dinámica
-                    markup=True,  # Permitir etiquetas de formato
+                    font_style="Subtitle1",
+                    markup=True,
+                    size_hint_y=None,
                 )
+                # Ajustar la altura del layout y la tarjeta en función del texto
+                self._adjust_card_height(details_layout, card, detalles_label, descripcion)
 
-                # Ajustar el tamaño del texto y calcular la altura automáticamente
-                detalles_label.text_size = (card.width - 20, None)  # Limitar el ancho al tamaño de la tarjeta con márgenes
-                detalles_label.height = detalles_label.texture_size[1]  # Usar el tamaño del texto renderizado
-                detalles_label.padding = [10, 20]  # Aplicar padding
-
-                # Aumentar el tamaño de la tarjeta si se muestran los detalles
-                card.height = 140 + detalles_label.height + 20  # Altura base + altura del texto + margen adicional
+                # Añadir la etiqueta de detalles al layout
+                details_layout.add_widget(detalles_label)
                 
-                # Añadir el label con los detalles al final del card
-                card.add_widget(detalles_label)
-
-                # Guardar el widget en la lista para poder eliminarlo después
-                self.detalles_existentes = [detalles_label]  # Guarda el label añadido
-
         else:  # Ocultar los detalles
-            if hasattr(self, 'detalles_existentes') and self.detalles_existentes:  # Si existen detalles
-                # Reducir el tamaño de la tarjeta cuando se ocultan los detalles
-                card.height = 140  # Puedes ajustar esta altura según la altura inicial
+            if details_layout.children:
+                detalles_label = details_layout.children[0]
+                card.height -= detalles_label.height
+                details_layout.clear_widgets()
+                details_layout.height = 0
 
-                # Eliminar los widgets de detalles
-                for widget in self.detalles_existentes:
-                    card.remove_widget(widget)
+    def _adjust_card_height(self, details_layout, card, detalles_label, size):
+        """Ajusta dinámicamente la altura de la tarjeta según la longitud del texto y el número de líneas necesarias."""
+        # Contar los caracteres del texto
+        texto = detalles_label.text
 
-                # Limpiar la lista de detalles
-                del self.detalles_existentes  # Eliminar la variable que contiene los detalles
+        # Dividir el texto en líneas de 43 caracteres
+        num_lineas = math.ceil(len(texto) / 43)  # Divide el texto en líneas de 43 caracteres y redondea hacia arriba
+
+        # Calcular la altura total basada en el número de líneas
+        altura_linea = 20  # Cada línea aumenta 20dp de altura
+        altura_total = num_lineas * altura_linea  # Total de la altura a agregar
+
+        # Ajustar la altura del detalles_label (la altura es proporcional al número de líneas)
+        detalles_label.height = altura_total
+
+        # Ajustar la altura del layout que contiene los detalles
+        details_layout.height = detalles_label.height
+
+        # Ajustar la altura total de la tarjeta
+        card.height += detalles_label.height
 
     def ir_a_editar(self, key):
         """Navega a la pantalla de edición para el recordatorio."""
         self.manager.current = "editar_tarea"
         recordatorio = next((r[1] for r in obtener_todos_recordatorios() if r[0] == key), None)
+        if not recordatorio:
+            print(f"Recordatorio con clave {key} no encontrado")
+            return
 
         if recordatorio:
             editar_screen = self.manager.get_screen("editar_tarea")
@@ -334,30 +352,79 @@ class RemindersScreen(Screen):
             editar_screen.ids.editar_fecha.text = recordatorio.get("fecha", "")
             editar_screen.ids.editar_hora.text = recordatorio.get("hora", "")
             editar_screen.recordatorio_id = key
-
-
 # Pantalla para agregar recordatorios
-class AddRecordatorioScreen(Screen):
+class AddRecordatorioScreen(MDScreen):
     def agregar_recordatorio(self):
+        # Obtiene los valores de los campos
         titulo = self.ids.titulo.text
         descripcion = self.ids.descripcion.text
         fecha = self.ids.fecha.text
         hora = self.ids.hora.text
 
+        # Valida que todos los campos estén llenos
         if not all([titulo, descripcion, fecha, hora]):
             print("Todos los campos son obligatorios.")
             return
 
+        # Genera una clave única
         clave = str(uuid.uuid4())
-        agregar_recordatorio(clave, titulo, descripcion, fecha, hora)
 
+        # Guarda el recordatorio en la base de datos
+        try:
+            agregar_recordatorio(clave, titulo, descripcion, fecha, hora)  # Llama a la función de base de datos
+            print(f"Recordatorio guardado correctamente: {clave}, {titulo}, {descripcion}, {fecha}, {hora}")
+        except Exception as e:
+            print(f"Error al guardar en la base de datos: {e}")
+            return
+
+        # Limpia los campos y regresa a la pantalla anterior
         self.ids.titulo.text = ""
         self.ids.descripcion.text = ""
         self.ids.fecha.text = ""
         self.ids.hora.text = ""
         self.manager.current = "reminders"
 
+    def on_date_selected(self, instance, value, date_range):
+        """Asigna la fecha seleccionada al campo de texto."""
+        if value:
+            try:
+                self.ids.fecha.text = value.strftime("%d/%m/%Y")
+            except Exception as e:
+                print(f"Error al actualizar el campo de texto: {e}")
+        else:
+            print("No se seleccionó ninguna fecha.")
 
+    def on_time_selected(self, instance, time):
+        """Asigna la hora seleccionada al campo de texto."""
+        if time:
+            try:
+                self.ids.hora.text = time.strftime("%H:%M")  # Formato de 24 horas
+            except Exception as e:
+                print(f"Error al actualizar el campo de texto: {e}")
+        else:
+            print("No se seleccionó ninguna hora.")
+
+    def show_date_picker(self, focus):
+        """Muestra el selector de fecha si el campo tiene el foco."""
+        if not focus:
+            return
+        try:
+            date_dialog = MDDatePicker()
+            date_dialog.bind(on_save=self.on_date_selected)
+            date_dialog.open()
+        except Exception as e:
+            print(f"Error al abrir el DatePicker: {e}")
+
+    def show_time_picker(self, focus):
+        """Muestra el selector de hora si el campo tiene el foco."""
+        if not focus:
+            return
+        try:
+            time_dialog = MDTimePicker()
+            time_dialog.bind(on_save=self.on_time_selected)
+            time_dialog.open()
+        except Exception as e:
+            print(f"Error al abrir el TimePicker: {e}") 
 # Pantalla para editar recordatorios
 class EditarTareaScreen(Screen):
     recordatorio_id = None
@@ -375,6 +442,49 @@ class EditarTareaScreen(Screen):
         agregar_recordatorio(self.recordatorio_id, titulo, descripcion, fecha, hora)
         self.manager.current = "reminders"
 
+    def on_date_selected(self, instance, value, date_range):
+        """Asigna la fecha seleccionada al campo de texto."""
+        if value:
+            try:
+                # Ajuste correcto del ID del campo de texto
+                self.ids.editar_fecha.text = value.strftime("%d/%m/%Y")
+            except Exception as e:
+                print(f"Error al actualizar el campo de texto: {e}")
+        else:
+            print("No se seleccionó ninguna fecha.")
+
+    def on_time_selected(self, instance, time):
+        """Asigna la hora seleccionada al campo de texto."""
+        if time:
+            try:
+                # Ajuste correcto del ID del campo de texto
+                self.ids.editar_hora.text = time.strftime("%H:%M")  # Formato de 24 horas
+            except Exception as e:
+                print(f"Error al actualizar el campo de texto: {e}")
+        else:
+            print("No se seleccionó ninguna hora.")
+
+    def show_date_picker(self, focus):
+        """Muestra el selector de fecha si el campo tiene el foco."""
+        if not focus:
+            return
+        try:
+            date_dialog = MDDatePicker()
+            date_dialog.bind(on_save=self.on_date_selected)
+            date_dialog.open()
+        except Exception as e:
+            print(f"Error al abrir el DatePicker: {e}")
+
+    def show_time_picker(self, focus):
+        """Muestra el selector de hora si el campo tiene el foco."""
+        if not focus:
+            return
+        try:
+            time_dialog = MDTimePicker()
+            time_dialog.bind(on_save=self.on_time_selected)
+            time_dialog.open()
+        except Exception as e:
+            print(f"Error al abrir el TimePicker: {e}")
 
 # Pantallas adicionales
 class CalendarScreen(Screen):
@@ -402,7 +512,6 @@ class TestApp(MDApp):
         sm.add_widget(PendingScreen(name="pending"))
         sm.add_widget(SettingsScreen(name="settings"))
         return sm
-
 
 if __name__ == "__main__":
     TestApp().run()
