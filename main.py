@@ -15,12 +15,12 @@ from kivy.clock import Clock
 from kivy.core.audio import SoundLoader
 import uuid  # Para generar claves únicas
 import math
+from kivy.core.window import Window
 from database import (
     obtener_todos_recordatorios,
     agregar_recordatorio,
     eliminar_recordatorio,
 )
-from kivy.core.window import Window
 
 # Ajuste para el tamaño de la ventana
 Window.size = (414, 896)  # Ajustar tamaño de la ventana si es necesario
