@@ -95,6 +95,26 @@ def actualizar_check_item(clave_lista, id_item, nuevo_estado):
                 return True
     return False
 
+def actualizar_texto_item(clave_lista, id_item, nuevo_texto):
+    """
+    Actualiza el texto de un ítem en una lista en la base de datos.
+
+    - clave_lista: Clave de la lista en la base de datos.
+    - id_item: ID único del ítem.
+    - nuevo_texto: Nuevo texto para el ítem.
+    """
+    # Obtener la lista desde la base de datos
+    lista = store_listas.get(clave_lista)
+    if lista:
+        for item in lista["items"]:
+            if item["id_item"] == id_item:
+                item["texto"] = nuevo_texto  # Actualizar el texto
+                # Guardar la lista actualizada
+                store_listas.put(clave_lista, **lista)
+                return True
+    return False
+
+
 
 # Función para obtener los ítems de una lista
 def obtener_items(clave_lista):

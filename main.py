@@ -1,6 +1,9 @@
 from kivymd.app import MDApp
 from kivy.app import App
 from kivymd.uix.card import MDCard
+from kivymd.uix.dialog import (MDDialog, MDDialogContentContainer)
+from kivymd.uix.button import MDFlatButton, MDRaisedButton
+from kivymd.uix.textfield import MDTextField
 from kivymd.uix.label import MDLabel
 from kivy.core.text import LabelBase
 from kivy.uix.label import Label
@@ -28,6 +31,7 @@ from database import (
     eliminar_lista,
     agregar_item_a_lista,
     actualizar_check_item,
+    actualizar_texto_item,
     obtener_items,
     eliminar_item_de_lista
 )
@@ -683,7 +687,54 @@ class ShowListScreen(Screen):
             exito = actualizar_check_item(clave_lista, item_id, active)
             if not exito:
                 print(f"Error al actualizar el estado del ítem {item_id}")
-    
+
+        def on_card_click(instance):
+            """Abre un diálogo para editar el texto del ítem."""
+            dialog = MDDialog(
+                title="Editar Ítem",
+                type="custom",
+                content_cls=BoxLayout(
+                    orientation="vertical",
+                    spacing="10dp",
+                    children=[
+                        MDTextField(
+                            id="edit_text",
+                            hint_text="Editar texto",
+                            text=texto,  # Aquí el texto a editar
+                            size_hint=(1, None),
+                            height="40dp"
+                        )
+                    ]
+                ),
+                buttons=[
+                    MDFlatButton(
+                        text="CANCELAR",
+                        on_release=lambda x: dialog.dismiss()
+                    ),
+                    MDRaisedButton(
+                        text="GUARDAR",
+                        on_release=lambda x: save_edit(dialog)
+                    )
+                ],
+            )
+            dialog.open()
+
+            def save_edit(dialog, edit_field):
+                """Guarda el nuevo texto y actualiza el ítem en la base de datos."""
+                new_text = edit_field.text.strip()
+                if new_text:  # Verificar que el texto no esté vacío
+                    # Actualizar el texto del ítem en la base de datos
+                    exito = actualizar_texto_item(clave_lista, item_id, new_text)
+                    if exito:
+                        print(f"Texto del ítem actualizado a: {new_text}")
+                        dialog.dismiss()  # Cerrar el diálogo
+                    else:
+                        print("Error al actualizar el texto en la base de datos.")
+                else:
+                    print("El campo de texto no puede estar vacío.")
+
+
+
         # Crear el checkbox
         checkbox = CheckBox(
             size_hint=(None, None),
@@ -706,16 +757,81 @@ class ShowListScreen(Screen):
             text_size=(None, None),
         )
 
+        # Hacer que la tarjeta sea seleccionable para edición
+        card.bind(on_touch_down=lambda instance, touch: on_card_click(instance) if card.collide_point(*touch.pos) else None)
+
         # Agregar los widgets a la tarjeta
         card.add_widget(checkbox)
         card.add_widget(item_label)
 
         return card
 
+    def agregar_item(self, clave_lista):
+        """
+        Abre un diálogo con un campo de texto para ingresar un nuevo ítem y dos botones:
+        uno para confirmar la adición y otro para cancelar.
+        """
+        # Campo de texto para ingresar el nombre del ítem
+        self.item_input = MDTextField(
+            hint_text="Item",
+            size_hint_x=0.9,
+            pos_hint={"center_x": 0.5},
+        )
+
+        # Crear el diálogo
+        self.dialog = MDDialog(
+            title="Agregar nuevo ítem",
+            type="custom",
+            content_cls=self.item_input,
+            buttons=[
+                MDRaisedButton(
+                    text="Cancelar",
+                    on_release=self.cancelar_dialogo
+                ),
+                MDFlatButton(
+                    
+                    text="Agregar",
+                    md_bg_color=(0.6, 0.3, 0.4, 1),
+                    text_color=(1, 1, 1, 1),
+                    on_release=lambda _: self.confirmar_agregar_item(clave_lista)
+                ),
+            ],
+        )
+        # Abrir el diálogo
+        self.dialog.open()
+
+    def confirmar_agregar_item(self, clave_lista):
+        """
+        Maneja el evento cuando el usuario confirma agregar un nuevo ítem.
+        """
+        nuevo_item = self.item_input.text.strip()  # Obtener el texto ingresado
+        if nuevo_item:  # Validar que no esté vacío
+            # Llamar a la función para agregar el ítem a la lista en la base de datos
+            exito = agregar_item_a_lista(clave_lista, nuevo_item)
+            if exito:
+                print(f"Nuevo ítem agregado: {nuevo_item}")  # Mensaje de confirmación
+                # Puedes agregar lógica aquí para refrescar la vista o lista actual
+
+                # Actualizar la lista de ítems para reflejar el nuevo ítem
+                self.load_items()
+            else:
+                print("Error al agregar el ítem a la base de datos.")
+            self.dialog.dismiss()  # Cerrar el diálogo
+        else:
+            # Mostrar algún mensaje de error o dejar el campo requerido
+            print("El campo de ítem está vacío.")
+
+    def cancelar_dialogo(self, *args):
+        """
+        Cierra el diálogo sin realizar ninguna acción.
+        """
+        self.dialog.dismiss()
+    
     def delete_list(self):
         # Suponiendo que tienes el ID de la lista en una variable `current_list_id`
         popup = ConfirmPopup(list_id=self.lista_id)
         popup.open()
+
 
 class ConfirmPopup(Popup):
     def __init__(self, list_id, **kwargs):
