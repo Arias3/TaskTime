@@ -61,7 +61,7 @@
         Image:
             source: root.image_source  # Utiliza la propiedad image_source
             size_hint: None, None
-            size: dp(106), dp(100)  # Tamaño ajustado de la imagen
+            size: dp(126), dp(120)  # Tamaño ajustado de la imagen
             pos_hint: {"center_x": 0.5}  # Centra la imagen horizontalmente
 
 
@@ -512,21 +512,297 @@
 
 
 # Pantalla de Pendientes
-<PendingScreen>:
+<ListScreen>:
     BoxLayout:
-        orientation: "vertical"
-        Label:
-            text: "Pantalla de Pendientes"
-            font_size: "30sp"
+        orientation: 'vertical'
+        # Header
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: dp(15)
+            spacing: dp(20)
             size_hint_y: None
-            height: dp(100)
-            halign: "center"
-        Button:
-            text: "Regresar"
-            size_hint: None, None
-            size: dp(200), dp(50)
+            height: dp(80)
+
+            canvas:
+                Color:
+                    rgba: 0.831, 0.506, 0.631, 1  # Color de fondo del header
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [0, 0, 20, 20]
+
+            Image:
+                source: 'assets/logo2.png'
+                size_hint: None, None
+                size: dp(70), dp(70)
+                pos_hint: {"center_y": 0.5}
+
+            Label:
+                text: "MIS LISTAS"
+                font_size: "30sp"
+                font_name: "assets/TittleRegular.otf"
+                color: 0, 0, 0, 1
+                valign: "middle"
+                halign: "center"
+
+            Button:
+                size_hint: None, None
+                size: dp(70), dp(70)
+                pos_hint: {"center_y": 0.5}
+                on_release: app.root.current = "home"
+                background_normal: 'assets/back.png'
+                background_down: 'assets/back.png'
+
+        # Contenedor con el ScrollView y el botón flotante
+        FloatLayout:
+            # ScrollView para la lista de listas
+            ScrollView:
+                BoxLayout:
+                    id: listas_list
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: self.minimum_height
+                    spacing: dp(20)  # Aumento de separación entre las tarjetas
+                    padding: [dp(10), dp(20), dp(10), dp(20)]
+                    # Lista de listas
+                    BoxLayout:
+                        orientation: 'vertical'
+                        size_hint_y: None
+                        height: self.minimum_height
+                        spacing: dp(30)
+
+            # Botón flotante en la esquina inferior
+            MDFloatingActionButton:
+                icon: 'assets/add.png'
+                pos_hint: {"right": 0.95}
+                y: dp(20)
+                on_release: root.manager.current = 'AddList'
+                size_hint: None, None
+                md_bg_color: 0.831, 0.506, 0.631, 1
+                size: dp(58), dp(58)
+                elevation: 4
+                keep_on_top: True
+
+
+#Pantalla de visualización de lista individual
+<ShowListScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        
+        # Header
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: dp(15)
+            spacing: dp(20)
+            size_hint_y: None
+            height: dp(80)
+
+            canvas:
+                Color:
+                    rgba: 0.831, 0.506, 0.631, 1  # Color de fondo del header
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [0, 0, 20, 20]
+
+            Image:
+                source: 'assets/logo2.png'
+                size_hint: None, None
+                size: dp(70), dp(70)
+                pos_hint: {"center_y": 0.5}
+
+            Label:
+                id: header_title
+                text: ""  # Se actualizará dinámicamente
+                font_size: "30sp"
+                font_name: "assets/TittleRegular.otf"
+                color: 0, 0, 0, 1
+                valign: "middle"
+                halign: "center"
+
+            Button:
+                size_hint: None, None
+                size: dp(70), dp(70)
+                pos_hint: {"center_y": 0.5}
+                on_release: app.root.current = "list"  # Regresa a la pantalla de listas
+                background_normal: 'assets/back.png'
+                background_down: 'assets/back.png'
+
+        # Contenedor principal con los ítems y dos botones flotantes
+        FloatLayout:
+            #Scrollview
+            ScrollView:
+                BoxLayout:
+                    id: items_list
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: self.minimum_height
+                    spacing: dp(20)
+                    padding: [dp(10), dp(20), dp(10), dp(20)]
+                    #lista de Items
+                    BoxLayout:
+                        orientation: 'vertical'
+                        size_hint_y: None
+                        height: self.minimum_height
+                        spacing: dp(30)
+        
+            # Botón flotante en la esquina inferior
+            MDFloatingActionButton:
+                icon: 'assets/add.png'
+                pos_hint: {"right": 0.95}
+                y: dp(80)
+                on_release: root.manager.current = 'add_lista'
+                size_hint: None, None
+                md_bg_color: 0.831, 0.506, 0.631, 1
+                size: dp(58), dp(58)
+                elevation: 4
+                keep_on_top: True     
+
+            # Botón flotante en la esquina inferior
+            MDFloatingActionButton:
+                icon: 'assets/delete.png'
+                pos_hint: {"right": 0.95}
+                y: dp(20)
+                on_release: root.delete_list()
+                size_hint: None, None
+                md_bg_color: 0.831, 0.506, 0.631, 1
+                size: dp(8), dp(8)
+                elevation: 4
+                keep_on_top: True        
+
+#Pantalla para crear listas
+<AddListScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        
+        # Header con logo y título
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: dp(15)
+            spacing: dp(15)
+            size_hint_y: None
+            height: dp(80)
+            canvas:
+                Color:
+                    rgba: 0.831, 0.506, 0.631, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [0, 0, 20, 20]
+
+            Image:
+                source: 'assets/logo2.png'
+                size_hint: None, None
+                size: dp(70), dp(70)
+                pos_hint: {"center_y": 0.5}
+
+            Label:
+                text: "Nuevo Recordatorio"
+                font_size: "24sp"
+                font_name: "assets/TittleRegular.otf"
+                color: 0, 0, 0, 1
+                valign: "middle"
+                halign: "center"
+
+            Button:
+                size_hint: None, None
+                size: dp(70), dp(70)
+                pos_hint: {"center_y": 0.5}
+                on_release: app.root.current = "reminders"
+                background_normal: 'assets/back.png'
+                background_down: 'assets/back.png'
+
+        # Espacio entre el header y el formulario
+        Widget:
+            size_hint_y: 0.1
+
+        # Formulario de entrada de datos
+        BoxLayout:
+            orientation: "vertical"
+            spacing: "20dp"
+            padding: "10dp"
+
+            MDCard:
+                size_hint_y: None
+                height: "100dp"
+                padding: "10dp"
+                radius: [15, 15, 15, 15]
+                md_bg_color: 1, 1, 1, 1
+
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Color negro para el borde
+                    Line:
+                        width: 1.5  # Ancho del borde
+                        rounded_rectangle: self.x, self.y, self.width, self.height, 15  # Contorno redondeado
+
+                TextInput:
+                    id: titulo
+                    hint_text: "Título del recordatorio"
+                    multiline: True  # Permitir varias líneas
+                    size_hint_y: None
+                    height: "80dp"
+                    font_size: "16sp"
+                    background_color: 0, 0, 0, 0
+                    foreground_color: 0, 0, 0, 1
+                    hint_text_color: 0.5, 0.5, 0.5, 1
+                    padding: [10, 10, 10, 10]
+                    on_text: self.text = self.text[:25]  # Limitar a 25 caracteres
+
+
+            MDCard:
+                size_hint_y: None
+                height: "150dp"  # Altura ajustada para texto en párrafos
+                padding: "10dp"
+                radius: [15, 15, 15, 15]  # Bordes redondeados
+                md_bg_color: 1, 1, 1, 1  # Fondo blanco
+
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Color negro para el borde
+                    Line:
+                        width: 1.5  # Ancho del borde
+                        rounded_rectangle: self.x, self.y, self.width, self.height, 15  # Contorno redondeado
+
+                TextInput:
+                    id: descripcion
+                    hint_text: "Descripción del recordatorio"
+                    multiline: True  # Permitir texto en varias líneas
+                    size_hint_y: None
+                    height: "140dp"  # Altura dentro del MDCard
+                    font_size: "16sp"
+                    background_color: 0, 0, 0, 0  # Fondo transparente para heredar el de MDCard
+                    foreground_color: 0, 0, 0, 1  # Color del texto (negro)
+                    hint_text_color: 0.5, 0.5, 0.5, 1  # Color del texto de ayuda
+                    padding: [10, 10, 10, 10]
+
+        # Espacio entre el formulario y los botones
+        Widget:
+            size_hint_y: 0.25
+
+        # Botón en la parte inferior
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: "20dp"
+            padding: "20dp"
+            size_hint_y: None
+            height: dp(80)  # Altura ajustada para hacer el botón más grande
             pos_hint: {"center_x": 0.5}
-            on_release: app.root.current = "home"
+
+            MDRaisedButton:
+                text: "AGREGAR"
+                font_size:"30sp"
+                size_hint: None, None
+                size: dp(400), dp(80)  # Tamaño aumentado del botón
+                pos_hint: {"center_x": 0.5}
+                md_bg_color: 0.831, 0.506, 0.631, 1  # Color de fondo del botón
+                text_color: 0, 0, 0, 1  # Letras negras
+                font_name: "assets/TittleRegular.otf"
+                on_release: root.agregar_lista()
+
+        Widget:
+            size_hint_y: 0.1
+
 
 # Pantalla de Configuración
 <SettingsScreen>:

@@ -1,4 +1,5 @@
 from kivy.storage.jsonstore import JsonStore
+import uuid
 
 # Inicializa las bases de datos para recordatorios y listas
 store_recordatorios = JsonStore('recordatorios.json')
@@ -21,11 +22,25 @@ def eliminar_recordatorio(clave):
         store_recordatorios.delete(clave)
         return True
     return False
+##
+##---------------------------LISTAS------------------#
+##
 
 # Función para agregar una lista
 def agregar_lista(clave, titulo, descripcion):
-    """Agrega una nueva lista a la base de datos."""
-    store_listas.put(clave, titulo=titulo, descripcion=descripcion)
+    """Agrega una nueva lista a la base de datos, con un campo 'items' vacío."""
+    try:
+        # Verifica si la clave ya existe para evitar sobrescribir
+        if clave in store_listas:
+            print("La lista con esa clave ya existe.")
+            return
+        
+        # Agrega la nueva lista a la base de datos
+        store_listas.put(clave, titulo=titulo, descripcion=descripcion, items=[])
+        print(f"Lista '{titulo}' agregada correctamente.")
+    
+    except Exception as e:
+        print(f"Error al agregar la lista: {e}")
 
 # Función para obtener todas las listas
 def obtener_todas_listas():
@@ -39,3 +54,68 @@ def eliminar_lista(clave):
         store_listas.delete(clave)
         return True
     return False
+
+# Función para agregar un ítem a una lista
+def agregar_item_a_lista(clave_lista, texto_item, check=False):
+    """Agrega un nuevo ítem a una lista existente."""
+    try:
+        lista = store_listas.get(clave_lista)
+        if lista:
+            nuevo_item_id = str(uuid.uuid4())  # Generar un nuevo UUID para el ítem
+            item = {
+                "id_item": nuevo_item_id,
+                "texto": texto_item,
+                "check": check
+            }
+            lista["items"].append(item)  # Agregar el nuevo ítem a la lista
+            store_listas.put(clave_lista, **lista)  # Guardar la lista actualizada
+            return True
+        return False
+    except Exception as e:
+        print(f"Error al agregar el ítem: {e}")
+        return False
+
+
+def actualizar_check_item(clave_lista, id_item, nuevo_estado):
+    """
+    Actualiza el estado de check de un ítem en una lista en la base de datos.
+
+    - clave_lista: Clave de la lista en la base de datos.
+    - id_item: ID único del ítem.
+    - nuevo_estado: Nuevo estado del checkbox (True/False).
+    """
+    # Obtener la lista desde la base de datos
+    lista = store_listas.get(clave_lista)
+    if lista:
+        for item in lista["items"]:
+            if item["id_item"] == id_item:
+                item["check"] = nuevo_estado  # Actualizar el estado
+                # Guardar la lista actualizada
+                store_listas.put(clave_lista, **lista)
+                return True
+    return False
+
+
+# Función para obtener los ítems de una lista
+def obtener_items(clave_lista):
+    """Obtiene todos los ítems de una lista (independientemente de su estado)."""
+    lista = store_listas.get(clave_lista)
+    if lista:
+        return lista["items"]
+    return []
+
+# Función para eliminar un ítem de una lista
+def eliminar_item_de_lista(lista_id, item_id):
+    """Elimina un ítem de una lista por su ID."""
+    data = store_listas.get(lista_id)
+    if not data:
+        return False  # Si no existe la lista, retorna False
+
+    # Buscar el ítem a eliminar
+    item_to_remove = next((item for item in data["items"] if item["id_item"] == item_id), None)
+    if item_to_remove:
+        data["items"].remove(item_to_remove)  # Eliminar el ítem de la lista
+        store_listas.put(lista_id, **data)  # Actualizar la lista en la base de datos
+        return True
+    return False
+
