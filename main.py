@@ -846,100 +846,40 @@ class ShowListScreen(Screen):
         self.dialog.dismiss()
     
     def delete_list(self):
-        # Suponiendo que tienes el ID de la lista en una variable `current_list_id`
-        popup = ConfirmPopup(list_id=self.lista_id)
-        popup.open()
-
-
-class ConfirmPopup(Popup):
-    def __init__(self, list_id, **kwargs):
-        super().__init__(**kwargs)
-
-        # Propiedades del Popup
-        self.title = "Confirmación"
-        self.size_hint = (0.8, 0.25)
-        self.separator_color = (0.92, 0.82, 0.84, 1)  # Separador color #ebd0d7
-        self.separator_height = 2
-        self.title_align = "center"
-        self.title_color = (1, 1, 1, 1)  # Título en negro
-        self.title_font = "TittleRegular"
-        self.title_size = "20sp"
-
-        self.list_id = list_id
-
-        # Layout del contenido con fondo blanco
-        layout = BoxLayout(
-            orientation="vertical", spacing=10, padding=[10, 10, 10, 10]
-        )
-
-        # Agregar fondo blanco al layout con grafismo
-        with layout.canvas.before:
-            Color(1, 1, 1, 1)  # Color blanco
-            self.rect = Rectangle(size=layout.size, pos=layout.pos)
-        layout.bind(size=self.update_rect, pos=self.update_rect)
-
-        # Mensaje
-        message = Label(
+        # Crea el diálogo de confirmación
+        self.dialog = MDDialog(
+            title="Confirmación",
             text="¿Estás seguro de borrar esta lista?",
-            font_name="TittleRegular",
-            color=(0, 0, 0, 1),  # Texto negro
-            halign="center",
-            valign="middle",
-            size_hint=(1, 0.6),
+            buttons=[
+                MDFlatButton(
+                    text="No",
+                    on_release=self.cancelar_dialogo
+                ),
+                MDRaisedButton(
+                    text="Sí",
+                    md_bg_color=(0.6, 0.3, 0.4, 1),
+                    on_release=self.confirmar_eliminacion
+                ),
+            ]
         )
-        message.bind(size=message.setter('text_size'))  # Ajustar el texto al tamaño del widget
-        layout.add_widget(message)
 
-        # Botones
-        buttons_layout = BoxLayout(size_hint=(1, 0.4), spacing=5)  # Reducir espaciado entre botones
-        btn_yes = Button(
-            text="Sí",
-            size_hint=(0.5, 1),  # Reducir tamaño del botón
-            background_normal='',  # Asegura que se aplique el color
-            background_color=(0.92, 0.82, 0.84, 1),  # Color #ebd0d7
-            color=(0, 0, 0, 1),  # Texto negro
-            border=(10, 10, 10, 10),  # Bordes redondeados
-            on_release=self.delete_list,
-        )
-        btn_no = Button(
-            text="No",
-            size_hint=(0.5, 1),  # Reducir tamaño del botón
-            background_normal='',  # Asegura que se aplique el color
-            background_color=(0.92, 0.82, 0.84, 1),  # Color #ebd0d7
-            color=(0, 0, 0, 1),  # Texto negro
-            border=(10, 10, 10, 10),  # Bordes redondeados
-            on_release=self.dismiss,
-        )
-        buttons_layout.add_widget(btn_yes)
-        buttons_layout.add_widget(btn_no)
+        # Abre el diálogo
+        self.dialog.open()
 
-        layout.add_widget(buttons_layout)
+    def confirmar_eliminacion(self, instance):
+        # Aquí se debe implementar la lógica para eliminar la lista
+        # Supón que tienes una función que maneja la eliminación de la lista, por ejemplo `eliminar_lista(lista_id)`
+        if self.lista_id:  # Asegúrate de tener el ID de la lista antes de proceder
+            exito = eliminar_lista(self.lista_id)
+            if exito:
+                print("Lista eliminada correctamente")
 
-        # Añadir contenido al Popup
-        self.content = layout
-
-    def update_rect(self, instance, value):
-        """Actualizar el tamaño del rectángulo para que se ajuste al cambio de tamaño del layout."""
-        self.rect.pos = instance.pos
-        self.rect.size = instance.size
-
-    def delete_list(self, instance):
-        """
-        Elimina una lista usando la función eliminar_lista del archivo database.py 
-        y redirige al usuario a la pantalla de listas.
-        """
-        # Intenta eliminar la lista actual
-        if eliminar_lista(self.list_id):  # self.list_id debe contener la clave de la lista actual
-            # Redirigir a la pantalla de listas si se elimina correctamente
-            app = App.get_running_app()
-            app.root.current = 'list'
-            
-        else:
-            # Mostrar mensaje de error si la lista no existe o no pudo ser eliminada
-            print(f"Error: No se pudo eliminar la lista con ID {self.list_id}")
-
-        # Cerrar el popup
-        self.dismiss()
+                self.manager.current = "list"
+            else:
+                print("Hubo un error al intentar eliminar la lista")
+        
+        # Cerrar el diálogo después de la confirmación
+        self.dialog.dismiss()
 
 class AddListScreen(Screen):
 
