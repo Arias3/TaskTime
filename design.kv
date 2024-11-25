@@ -290,7 +290,7 @@
                     foreground_color: 0, 0, 0, 1
                     hint_text_color: 0.5, 0.5, 0.5, 1
                     padding: [10, 10, 10, 10]
-                    on_text: self.text = self.text[:40]  # Limitar a 40 caracteres
+                    on_text: self.text = self.text[:14]  # Limitar a 40 caracteres
 
             MDCard:
                 size_hint_y: None
@@ -317,6 +317,7 @@
                     foreground_color: 0, 0, 0, 1
                     hint_text_color: 0.5, 0.5, 0.5, 1
                     padding: [10, 10, 10, 10]
+                    
 
             MDTextField:
                 id: editar_fecha
@@ -439,7 +440,7 @@
                     foreground_color: 0, 0, 0, 1
                     hint_text_color: 0.5, 0.5, 0.5, 1
                     padding: [10, 10, 10, 10]
-                    on_text: self.text = self.text[:25]  # Limitar a 40 caracteres
+                    on_text: self.text = self.text[:14]  # Limitar a 40 caracteres
 
 
             MDCard:
@@ -747,7 +748,7 @@
                     foreground_color: 0, 0, 0, 1
                     hint_text_color: 0.5, 0.5, 0.5, 1
                     padding: [10, 10, 10, 10]
-                    on_text: self.text = self.text[:25]  # Limitar a 25 caracteres
+                    on_text: self.text = self.text[:14]  # Limitar a 25 caracteres
 
 
             MDCard:
@@ -775,6 +776,8 @@
                     foreground_color: 0, 0, 0, 1  # Color del texto (negro)
                     hint_text_color: 0.5, 0.5, 0.5, 1  # Color del texto de ayuda
                     padding: [10, 10, 10, 10]
+                    max_length: 95
+
 
         # Espacio entre el formulario y los botones
         Widget:

@@ -1,9 +1,22 @@
 from kivy.storage.jsonstore import JsonStore
 import uuid
+import os
 
 # Inicializa las bases de datos para recordatorios y listas
 store_recordatorios = JsonStore('recordatorios.json')
 store_listas = JsonStore('listas.json')
+
+# Función para verificar si el archivo existe y crearlo si no existe
+def initialize_store(file_path):
+    """Verifica si el archivo JSON existe, y lo crea si no existe."""
+    if not os.path.exists(file_path):
+        with open(file_path, 'w') as f:
+            f.write("{}")  # Escribe un objeto JSON vacío
+
+# Función para inicializar ambos archivos JSON
+def initialize_stores():
+    initialize_store('recordatorios.json')
+    initialize_store('listas.json')
 
 # Función para agregar un recordatorio
 def agregar_recordatorio(clave, titulo, descripcion, fecha, hora):
@@ -132,19 +145,4 @@ def obtener_texto_item(clave_lista, item_id):
         else:
             print(f"Elemento inválido encontrado en la lista: {item}")
     return ""  # Retorna una cadena vacía si no se encuentra el ítem
-
-# Función para eliminar un ítem de una lista
-def eliminar_item_de_lista(lista_id, item_id):
-    """Elimina un ítem de una lista por su ID."""
-    data = store_listas.get(lista_id)
-    if not data:
-        return False  # Si no existe la lista, retorna False
-
-    # Buscar el ítem a eliminar
-    item_to_remove = next((item for item in data["items"] if item["id_item"] == item_id), None)
-    if item_to_remove:
-        data["items"].remove(item_to_remove)  # Eliminar el ítem de la lista
-        store_listas.put(lista_id, **data)  # Actualizar la lista en la base de datos
-        return True
-    return False
 

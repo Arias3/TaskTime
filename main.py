@@ -34,7 +34,7 @@ from database import (
     actualizar_texto_item,
     obtener_items,
     obtener_texto_item,
-    eliminar_item_de_lista
+    initialize_stores,
 )
 import uuid  # Para generar claves únicas
 import math
@@ -740,7 +740,8 @@ class ShowListScreen(Screen):
             hint_text="Editar ítem",
             size_hint_x=0.9,
             pos_hint={"center_x": 0.5},
-            text=texto_actual  # Cargar el texto actual del ítem
+            text=texto_actual,  # Cargar el texto actual del ítem
+            max_text_length=30,
         )
 
         # Crear el diálogo
@@ -772,6 +773,12 @@ class ShowListScreen(Screen):
     def confirmar_editar_item(self, clave_lista, item_id):
         """Confirma la edición del ítem y actualiza la base de datos."""
         nuevo_texto = self.item_input_editar.text.strip()  # Obtener el texto ingresado
+        
+        # Validar que el texto no exceda el límite de caracteres
+        if len(nuevo_texto) > 30:
+            print("El texto excede el límite de caracteres.")
+            return  # No guardar el dato
+        
         if nuevo_texto:
             exito = actualizar_texto_item(clave_lista, item_id, nuevo_texto)
             if exito:
@@ -793,6 +800,8 @@ class ShowListScreen(Screen):
             hint_text="Item",
             size_hint_x=0.9,
             pos_hint={"center_x": 0.5},
+            multiline="True",
+            max_text_length=30,
         )
 
         # Crear el diálogo
@@ -823,6 +832,12 @@ class ShowListScreen(Screen):
         Maneja el evento cuando el usuario confirma agregar un nuevo ítem.
         """
         nuevo_item = self.item_input.text.strip()  # Obtener el texto ingresado
+        
+        # Validar que el texto no exceda el límite de caracteres
+        if len(nuevo_item) > 30:
+            print("El texto excede el límite de caracteres.")
+            return  # No guardar el dato
+
         if nuevo_item:  # Validar que no esté vacío
             # Llamar a la función para agregar el ítem a la lista en la base de datos
             exito = agregar_item_a_lista(clave_lista, nuevo_item)
@@ -923,6 +938,9 @@ class SettingsScreen(Screen):
 # --- Clase principal de la aplicación --- #
 class TestApp(MDApp):
     def build(self):
+        # Llamar a initialize_stores para verificar y crear los archivos si no existen
+        initialize_stores()
+
         sm = ScreenManager()
         
         # Añadir las pantallas existentes
