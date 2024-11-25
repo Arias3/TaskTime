@@ -777,6 +777,7 @@ class ShowListScreen(Screen):
             if exito:
                 print(f"Ítem actualizado: {nuevo_texto}")
                 self.load_items()
+                self.dialog.dismiss()  # Cerrar el diálogo
             else:
                 print("Error al actualizar el texto en la base de datos.")
         else:
