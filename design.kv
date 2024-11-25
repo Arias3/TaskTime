@@ -24,7 +24,7 @@
         MDLabel:
             text: "¡BIENVENIDO A TASKTIME!"
             halign: "center"
-            font_style: "H4"
+            font_style: "H3"
             font_name: "assets/TittleRegular.otf"  # Fuente personalizada
             text_color: 0, 0, 0, 1  # Color del texto (negro)
 
@@ -192,14 +192,14 @@
                     size_hint_y: None
                     height: self.minimum_height
                     spacing: dp(20)  # Aumento de separación entre los cards
-                    padding: [dp(10), dp(20), dp(10), dp(20)]
+                    padding: [dp(10), dp(20), dp(10), dp(40)]
                     # Lista de recordatorios
                     BoxLayout:
                         orientation: 'vertical'
                         size_hint_y: None
                         height: self.minimum_height
                         spacing: dp(30)
-
+                    
             # Botón flotante en la esquina inferior
             MDFloatingActionButton:
                 icon: 'assets/add.png'

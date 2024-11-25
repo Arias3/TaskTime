@@ -195,7 +195,7 @@ class RemindersScreen(Screen):
                 font_name="assets/TittleRegular.otf",
                 color=(0, 0, 0, 1),
                 text_size=(None, None),
-            )
+                )
         )
         info_layout.add_widget(
             MDLabel(
