@@ -265,58 +265,88 @@
             spacing: "20dp"
             padding: "10dp"
 
-            MDCard:
-                size_hint_y: None
-                height: "100dp"
-                padding: "10dp"
-                radius: [15, 15, 15, 15]
-                md_bg_color: 1, 1, 1, 1
+            BoxLayout:
+                orientation:'vertical'
+                spacing:"2dp"
 
-                canvas.before:
-                    Color:
-                        rgba: 0, 0, 0, 1  # Color negro para el borde
-                    Line:
-                        width: 1.5  # Ancho del borde
-                        rounded_rectangle: self.x, self.y, self.width, self.height, 15  # Contorno redondeado
-
-                TextInput:
-                    id: editar_titulo
-                    hint_text: "Título del recordatorio"
-                    multiline: True  # Permitir varias líneas
+                Label:
+                    text: "Ingrese el título del recordatorio:"
+                    font_name: "assets/TittleRegular.otf"
                     size_hint_y: None
-                    height: "80dp"
-                    font_size: "16sp"
-                    background_color: 0, 0, 0, 0
-                    foreground_color: 0, 0, 0, 1
-                    hint_text_color: 0.5, 0.5, 0.5, 1
-                    padding: [10, 10, 10, 10]
-                    on_text: self.text = self.text[:14]  # Limitar a 40 caracteres
+                    height: "30dp"
+                    font_size: "20sp"
+                    color: 0, 0, 0, 1
+                    halign: "left"
 
-            MDCard:
-                size_hint_y: None
-                height: "150dp"
-                padding: "10dp"
-                radius: [15, 15, 15, 15]
-                md_bg_color: 1, 1, 1, 1
-
-                canvas.before:
-                    Color:
-                        rgba: 0, 0, 0, 1
-                    Line:
-                        width: 1.5
-                        rounded_rectangle: self.x, self.y, self.width, self.height, 15
-
-                TextInput:
-                    id: editar_descripcion
-                    hint_text: "Descripción del recordatorio"
-                    multiline: True
+                MDCard:
                     size_hint_y: None
-                    height: "140dp"
-                    font_size: "16sp"
-                    background_color: 0, 0, 0, 0
-                    foreground_color: 0, 0, 0, 1
-                    hint_text_color: 0.5, 0.5, 0.5, 1
-                    padding: [10, 10, 10, 10]
+                    height: "100dp"
+                    padding: "10dp"
+                    radius: [15, 15, 15, 15]
+                    md_bg_color: 1, 1, 1, 1
+
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1  # Color negro para el borde
+                        Line:
+                            width: 1.5  # Ancho del borde
+                            rounded_rectangle: self.x, self.y, self.width, self.height, 15  # Contorno redondeado
+
+                    TextInput:
+                        id: editar_titulo
+                        hint_text: "Título del recordatorio"
+                        multiline: True  # Permitir varias líneas
+                        size_hint_y: None
+                        height: "80dp"
+                        font_size: "16sp"
+                        background_color: 0, 0, 0, 0
+                        foreground_color: 0, 0, 0, 1
+                        hint_text_color: 0.5, 0.5, 0.5, 1
+                        padding: [10, 10, 10, 10]
+                        on_text: self.text = self.text[:14]  # Limitar a 40 caracteres
+            # Espacio entre el formulario y los botones
+            Widget:
+                size_hint_y: "0.55dp"
+
+            BoxLayout:
+                orientation:'vertical'
+                spacing:"2dp"
+
+                Label:
+                    text: "Ingrese la descripción del recordatorio:"
+                    font_name: "assets/TittleRegular.otf"
+                    size_hint_y: None
+                    height: "40dp"
+                    font_size: "20sp"
+                    color: 0, 0, 0, 1
+                    halign: "left"
+                
+
+                MDCard:
+                    size_hint_y: None
+                    height: "150dp"
+                    padding: "10dp"
+                    radius: [15, 15, 15, 15]
+                    md_bg_color: 1, 1, 1, 1
+
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            width: 1.5
+                            rounded_rectangle: self.x, self.y, self.width, self.height, 15
+
+                    TextInput:
+                        id: editar_descripcion
+                        hint_text: "Descripción del recordatorio"
+                        multiline: True
+                        size_hint_y: None
+                        height: "140dp"
+                        font_size: "16sp"
+                        background_color: 0, 0, 0, 0
+                        foreground_color: 0, 0, 0, 1
+                        hint_text_color: 0.5, 0.5, 0.5, 1
+                        padding: [10, 10, 10, 10]
                     
 
             MDTextField:
@@ -415,79 +445,130 @@
             spacing: "20dp"
             padding: "10dp"
 
-            MDCard:
-                size_hint_y: None
-                height: "100dp"
-                padding: "10dp"
-                radius: [15, 15, 15, 15]
-                md_bg_color: 1, 1, 1, 1
-
-                canvas.before:
-                    Color:
-                        rgba: 0, 0, 0, 1  # Color negro para el borde
-                    Line:
-                        width: 1.5  # Ancho del borde
-                        rounded_rectangle: self.x, self.y, self.width, self.height, 15  # Contorno redondeado
-
-                TextInput:
-                    id: titulo
-                    hint_text: "Título del recordatorio"
-                    multiline: True  # Permitir varias líneas
+            BoxLayout:
+                orientation:'vertical'
+                spacing:"2dp"
+                Label:
+                    text: "Ingrese el título del recordatorio:"
+                    font_name: "assets/TittleRegular.otf"
                     size_hint_y: None
-                    height: "80dp"
-                    font_size: "16sp"
-                    background_color: 0, 0, 0, 0
-                    foreground_color: 0, 0, 0, 1
-                    hint_text_color: 0.5, 0.5, 0.5, 1
-                    padding: [10, 10, 10, 10]
-                    on_text: self.text = self.text[:14]  # Limitar a 40 caracteres
+                    height: "30dp"
+                    font_size: "20sp"
+                    color: 0, 0, 0, 1
+                    halign: "left"
 
-
-            MDCard:
-                size_hint_y: None
-                height: "150dp"  # Altura ajustada para texto en párrafos
-                padding: "10dp"
-                radius: [15, 15, 15, 15]  # Bordes redondeados
-                md_bg_color: 1, 1, 1, 1  # Fondo blanco
-
-                canvas.before:
-                    Color:
-                        rgba: 0, 0, 0, 1  # Color negro para el borde
-                    Line:
-                        width: 1.5  # Ancho del borde
-                        rounded_rectangle: self.x, self.y, self.width, self.height, 15  # Contorno redondeado
-
-                TextInput:
-                    id: descripcion
-                    hint_text: "Descripción del recordatorio"
-                    multiline: True  # Permitir texto en varias líneas
+                MDCard:
                     size_hint_y: None
-                    height: "140dp"  # Altura dentro del MDCard
-                    font_size: "16sp"
-                    background_color: 0, 0, 0, 0  # Fondo transparente para heredar el de MDCard
-                    foreground_color: 0, 0, 0, 1  # Color del texto (negro)
-                    hint_text_color: 0.5, 0.5, 0.5, 1  # Color del texto de ayuda
-                    padding: [10, 10, 10, 10]
+                    height: "100dp"
+                    padding: "10dp"
+                    radius: [15, 15, 15, 15]
+                    md_bg_color: 1, 1, 1, 1
 
-            MDTextField:
-                id: fecha
-                hint_text: "Fecha (dd/mm/yyyy)"
-                mode: "rectangle"
-                size_hint_y: None
-                height: "40dp"
-                on_focus: root.show_date_picker(self.focus)
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1  # Color negro para el borde
+                        Line:
+                            width: 1.5  # Ancho del borde
+                            rounded_rectangle: self.x, self.y, self.width, self.height, 15  # Contorno redondeado
 
-            MDTextField:
-                id: hora
-                hint_text: "Hora (hh:mm)"
-                mode: "rectangle"
-                size_hint_y: None
-                height: "40dp"
-                on_focus: root.show_time_picker(self.focus)
+                    TextInput:
+                        id: titulo
+                        hint_text: "Título del recordatorio"
+                        multiline: True  # Permitir varias líneas
+                        size_hint_y: None
+                        height: "80dp"
+                        font_size: "16sp"
+                        background_color: 0, 0, 0, 0
+                        foreground_color: 0, 0, 0, 1
+                        hint_text_color: 0.5, 0.5, 0.5, 1
+                        padding: [10, 10, 10, 10]
+                        on_text: self.text = self.text[:14]  # Limitar a 40 caracteres
+            
+            # Espacio entre el formulario y los botones
+            Widget:
+                size_hint_y: "0.55dp" 
+            BoxLayout:
+                orientation:'vertical'
+                spacing:"2dp"
+                Label:
+                    text: "Ingrese la descripción del recordatorio:"
+                    font_name: "assets/TittleRegular.otf"
+                    size_hint_y: None
+                    height: "40dp"
+                    font_size: "20sp"
+                    color: 0, 0, 0, 1
+                    halign: "left"
+                
+                MDCard:
+                    size_hint_y: None
+                    height: "150dp"  # Altura ajustada para texto en párrafos
+                    padding: "10dp"
+                    radius: [15, 15, 15, 15]  # Bordes redondeados
+                    md_bg_color: 1, 1, 1, 1  # Fondo blanco
+
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1  # Color negro para el borde
+                        Line:
+                            width: 1.5  # Ancho del borde
+                            rounded_rectangle: self.x, self.y, self.width, self.height, 15  # Contorno redondeado
+
+                    TextInput:
+                        id: descripcion
+                        hint_text: "Descripción del recordatorio"
+                        multiline: True  # Permitir texto en varias líneas
+                        size_hint_y: None
+                        height: "140dp"  # Altura dentro del MDCard
+                        font_size: "16sp"
+                        background_color: 0, 0, 0, 0  # Fondo transparente para heredar el de MDCard
+                        foreground_color: 0, 0, 0, 1  # Color del texto (negro)
+                        hint_text_color: 0.5, 0.5, 0.5, 1  # Color del texto de ayuda
+                        padding: [10, 10, 10, 10]
+            
+            BoxLayout:
+                orientation:'vertical'
+                spacing:"2dp"
+                Label:
+                    text: "Ingrese la fecha del recordatorio:"
+                    font_name: "assets/TittleRegular.otf"
+                    size_hint_y: None
+                    height: "40dp"
+                    font_size: "20sp"
+                    color: 0, 0, 0, 1
+                    halign: "left"
+
+                MDTextField:
+                    id: fecha
+                    hint_text: "Fecha"
+                    mode: "rectangle"
+                    size_hint_y: None
+                    height: "40dp"
+                    on_focus: root.show_date_picker(self.focus)
+            
+            BoxLayout:
+                orientation:'vertical'
+                spacing:"2dp"
+
+                Label:
+                    text: "Ingrese la hora del recordatorio:"
+                    font_name: "assets/TittleRegular.otf"
+                    size_hint_y: None
+                    height: "40dp"
+                    font_size: "20sp"
+                    color: 0, 0, 0, 1
+                    halign: "left"
+
+                MDTextField:
+                    id: hora
+                    hint_text: "Hora"
+                    mode: "rectangle"
+                    size_hint_y: None
+                    height: "40dp"
+                    on_focus: root.show_time_picker(self.focus)
 
         # Espacio entre el formulario y los botones
         Widget:
-            size_hint_y: 0.25
+            size_hint_y: 0.1
 
         # Botón en la parte inferior
         BoxLayout:
@@ -723,65 +804,88 @@
             spacing: "20dp"
             padding: "10dp"
 
-            MDCard:
-                size_hint_y: None
-                height: "100dp"
-                padding: "10dp"
-                radius: [15, 15, 15, 15]
-                md_bg_color: 1, 1, 1, 1
-
-                canvas.before:
-                    Color:
-                        rgba: 0, 0, 0, 1  # Color negro para el borde
-                    Line:
-                        width: 1.5  # Ancho del borde
-                        rounded_rectangle: self.x, self.y, self.width, self.height, 15  # Contorno redondeado
-
-                TextInput:
-                    id: titulo
-                    hint_text: "Título de la lista"
-                    multiline: True  # Permitir varias líneas
+            BoxLayout:
+                orientation:'vertical'
+                spacing:"2dp"
+                Label:
+                    text: "Ingrese el título de la lista:"
+                    font_name: "assets/TittleRegular.otf"
                     size_hint_y: None
-                    height: "80dp"
-                    font_size: "16sp"
-                    background_color: 0, 0, 0, 0
-                    foreground_color: 0, 0, 0, 1
-                    hint_text_color: 0.5, 0.5, 0.5, 1
-                    padding: [10, 10, 10, 10]
-                    on_text: self.text = self.text[:14]  # Limitar a 25 caracteres
+                    height: "30dp"
+                    font_size: "20sp"
+                    color: 0, 0, 0, 1
+                    halign: "left"
 
-
-            MDCard:
-                size_hint_y: None
-                height: "150dp"  # Altura ajustada para texto en párrafos
-                padding: "10dp"
-                radius: [15, 15, 15, 15]  # Bordes redondeados
-                md_bg_color: 1, 1, 1, 1  # Fondo blanco
-
-                canvas.before:
-                    Color:
-                        rgba: 0, 0, 0, 1  # Color negro para el borde
-                    Line:
-                        width: 1.5  # Ancho del borde
-                        rounded_rectangle: self.x, self.y, self.width, self.height, 15  # Contorno redondeado
-
-                TextInput:
-                    id: descripcion
-                    hint_text: "Descripción de la lista"
-                    multiline: True  # Permitir texto en varias líneas
+                MDCard:
                     size_hint_y: None
-                    height: "140dp"  # Altura dentro del MDCard
-                    font_size: "16sp"
-                    background_color: 0, 0, 0, 0  # Fondo transparente para heredar el de MDCard
-                    foreground_color: 0, 0, 0, 1  # Color del texto (negro)
-                    hint_text_color: 0.5, 0.5, 0.5, 1  # Color del texto de ayuda
-                    padding: [10, 10, 10, 10]
-                    max_length: 95
+                    height: "100dp"
+                    padding: "10dp"
+                    radius: [15, 15, 15, 15]
+                    md_bg_color: 1, 1, 1, 1
+
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1  # Color negro para el borde
+                        Line:
+                            width: 1.5  # Ancho del borde
+                            rounded_rectangle: self.x, self.y, self.width, self.height, 15  # Contorno redondeado
+
+                    TextInput:
+                        id: titulo
+                        hint_text: "Título de la lista"
+                        multiline: True  # Permitir varias líneas
+                        size_hint_y: None
+                        height: "80dp"
+                        font_size: "16sp"
+                        background_color: 0, 0, 0, 0
+                        foreground_color: 0, 0, 0, 1
+                        hint_text_color: 0.5, 0.5, 0.5, 1
+                        padding: [10, 10, 10, 10]
+                        on_text: self.text = self.text[:14]  # Limitar a 25 caracteres
+            
+            BoxLayout:
+                orientation:'vertical'
+                spacing:"2dp"
+                Label:
+                    text: "Ingrese la descripción de la lista:"
+                    font_name: "assets/TittleRegular.otf"
+                    size_hint_y: None
+                    height: "40dp"
+                    font_size: "20sp"
+                    color: 0, 0, 0, 1
+                    halign: "left"
+
+                MDCard:
+                    size_hint_y: None
+                    height: "150dp"  # Altura ajustada para texto en párrafos
+                    padding: "10dp"
+                    radius: [15, 15, 15, 15]  # Bordes redondeados
+                    md_bg_color: 1, 1, 1, 1  # Fondo blanco
+
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1  # Color negro para el borde
+                        Line:
+                            width: 1.5  # Ancho del borde
+                            rounded_rectangle: self.x, self.y, self.width, self.height, 15  # Contorno redondeado
+
+                    TextInput:
+                        id: descripcion
+                        hint_text: "Descripción de la lista"
+                        multiline: True  # Permitir texto en varias líneas
+                        size_hint_y: None
+                        height: "140dp"  # Altura dentro del MDCard
+                        font_size: "16sp"
+                        background_color: 0, 0, 0, 0  # Fondo transparente para heredar el de MDCard
+                        foreground_color: 0, 0, 0, 1  # Color del texto (negro)
+                        hint_text_color: 0.5, 0.5, 0.5, 1  # Color del texto de ayuda
+                        padding: [10, 10, 10, 10]
+                        max_length: 95
 
 
         # Espacio entre el formulario y los botones
         Widget:
-            size_hint_y: 0.25
+            size_hint_y: 0.3
 
         # Botón en la parte inferior
         BoxLayout:

@@ -7,6 +7,8 @@ from kivymd.uix.textfield import MDTextField
 from kivymd.uix.label import MDLabel
 from kivy.core.text import LabelBase
 from kivy.uix.label import Label
+from kivy.uix.carousel import Carousel
+from kivy.uix.image import Image
 from kivymd.uix.button import MDIconButton
 from kivy.uix.button import Button
 from kivy.uix.checkbox import CheckBox
@@ -929,7 +931,33 @@ class AddListScreen(Screen):
 
 
 class CalendarScreen(Screen):
-    pass
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        # Crear un Carousel para mostrar las imágenes del calendario
+        self.carousel = Carousel(direction='right')
+
+        # Añadir imágenes al Carousel
+        for i in range(1, 13):  # Asumiendo 12 imágenes, una para cada mes
+            img = Image(source=f'assets/mes_{i}.png', allow_stretch=True)
+            self.carousel.add_widget(img)
+
+        # Layout principal con botones
+        layout = BoxLayout(orientation='vertical')
+
+        # Botones de navegación
+        button_layout = BoxLayout(size_hint_y=0.1)
+        prev_button = Button(text="Anterior", on_press=lambda x: self.carousel.load_previous())
+        next_button = Button(text="Siguiente", on_press=lambda x: self.carousel.load_next())
+        button_layout.add_widget(prev_button)
+        button_layout.add_widget(next_button)
+
+        # Añadir elementos al layout principal
+        layout.add_widget(self.carousel)
+        layout.add_widget(button_layout)
+
+        # Añadir el layout principal a la pantalla
+        self.add_widget(layout)
 
 
 class SettingsScreen(Screen):
