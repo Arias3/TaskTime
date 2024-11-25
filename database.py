@@ -110,11 +110,9 @@ def actualizar_texto_item(clave_lista, id_item, nuevo_texto):
             if item["id_item"] == id_item:
                 item["texto"] = nuevo_texto  # Actualizar el texto
                 # Guardar la lista actualizada
-                store_listas.put(clave_lista, **lista)
+                store_listas[clave_lista] = lista  # Guardar los cambios en el diccionario
                 return True
     return False
-
-
 
 # Función para obtener los ítems de una lista
 def obtener_items(clave_lista):
@@ -123,6 +121,17 @@ def obtener_items(clave_lista):
     if lista:
         return lista["items"]
     return []
+
+def obtener_texto_item(clave_lista, item_id):
+    """Obtiene el texto asociado a un ítem de una lista."""
+    items = obtener_items(clave_lista)
+    for item in items:
+        if isinstance(item, dict):  # Asegurarse de que sea un diccionario
+            if item.get("id_item") == item_id:  # Usar "id_item" en lugar de "id"
+                return item.get("texto", "")  # Retorna el texto o una cadena vacía si no existe
+        else:
+            print(f"Elemento inválido encontrado en la lista: {item}")
+    return ""  # Retorna una cadena vacía si no se encuentra el ítem
 
 # Función para eliminar un ítem de una lista
 def eliminar_item_de_lista(lista_id, item_id):

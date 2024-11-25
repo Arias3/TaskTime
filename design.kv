@@ -697,7 +697,7 @@
                 pos_hint: {"center_y": 0.5}
 
             Label:
-                text: "Nuevo Recordatorio"
+                text: "Nueva Lista"
                 font_size: "24sp"
                 font_name: "assets/TittleRegular.otf"
                 color: 0, 0, 0, 1
@@ -708,7 +708,7 @@
                 size_hint: None, None
                 size: dp(70), dp(70)
                 pos_hint: {"center_y": 0.5}
-                on_release: app.root.current = "reminders"
+                on_release: app.root.current = "list"
                 background_normal: 'assets/back.png'
                 background_down: 'assets/back.png'
 
@@ -738,7 +738,7 @@
 
                 TextInput:
                     id: titulo
-                    hint_text: "Título del recordatorio"
+                    hint_text: "Título de la lista"
                     multiline: True  # Permitir varias líneas
                     size_hint_y: None
                     height: "80dp"
@@ -766,7 +766,7 @@
 
                 TextInput:
                     id: descripcion
-                    hint_text: "Descripción del recordatorio"
+                    hint_text: "Descripción de la lista"
                     multiline: True  # Permitir texto en varias líneas
                     size_hint_y: None
                     height: "140dp"  # Altura dentro del MDCard
