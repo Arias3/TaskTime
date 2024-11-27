@@ -15,7 +15,6 @@ from kivy.uix.checkbox import CheckBox
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.pickers import MDDatePicker, MDTimePicker
 from kivymd.uix.screen import MDScreen
-from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
@@ -29,7 +28,6 @@ from database import (
     eliminar_recordatorio,
     obtener_todas_listas,
     agregar_lista,
-    obtener_todas_listas,
     eliminar_lista,
     agregar_item_a_lista,
     actualizar_check_item,
