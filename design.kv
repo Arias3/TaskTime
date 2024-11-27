@@ -122,23 +122,52 @@
             CustomButton:
                 image_source: 'assets/configuracion.png'
                 on_release: root.go_to_settings()
-
-# Pantalla de Calendario
+#Pantalla para los calendarios
 <CalendarScreen>:
     BoxLayout:
-        orientation: "vertical"
-        Label:
-            text: "Pantalla de Calendario"
-            font_size: "30sp"
+        orientation: 'vertical'
+        # Header
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: dp(15)
+            spacing: dp(15)
             size_hint_y: None
-            height: dp(100)
-            halign: "center"
-        Button:
-            text: "Regresar"
-            size_hint: None, None
-            size: dp(200), dp(50)
-            pos_hint: {"center_x": 0.5}
-            on_release: app.root.current = "home"
+            height: dp(80)
+
+            canvas:
+                Color:
+                    rgba: 0.831, 0.506, 0.631, 1  # Color de fondo del header
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [0, 0, 20, 20]
+
+            Image:
+                source: 'assets/logo2.png'
+                size_hint: None, None
+                size: dp(60), dp(60)
+                pos_hint: {"center_y": 0.5}
+
+            Label:
+                text: "Calendario"
+                font_size: "30sp"
+                font_name: "assets/TittleRegular.otf"
+                color: 0, 0, 0, 1
+                valign: "middle"
+                halign: "center"
+
+            Button:
+                size_hint: None, None
+                size: dp(60), dp(60)
+                pos_hint: {"center_y": 0.5}
+                on_release: app.root.current = "home"
+                background_normal: 'assets/back.png'
+                background_down: 'assets/back.png'
+
+        # Espacio entre el header y el contenido
+        Widget:
+            size_hint_y: 0.05
+
 
 # Pantalla de Recordatorios
 <RemindersScreen>:
