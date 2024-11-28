@@ -928,12 +928,11 @@ class AddListScreen(Screen):
         self.manager.current = "list"  # Asegúrate de que "listas" sea el nombre correcto de la pantalla
 
 class CalendarScreen(Screen):
+    current_month = StringProperty("Noviembre")  # Usa StringProperty para enlazar con el archivo KV
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        # Inicializa el atributo current_month
-        self.current_month = "Noviembre"  # Puedes establecer un valor inicial, o calcularlo dinámicamente
-        
         # Crear un Carousel para las imágenes del calendario
         self.carousel = Carousel(direction='right', scroll_timeout=0)  # Desactivar scroll horizontal
         self.months = ["Septiembre", "Octubre", "Noviembre", "Diciembre", "Enero",
@@ -972,6 +971,7 @@ class CalendarScreen(Screen):
         """Retrocede al mes anterior en el Carousel."""
         self.carousel.load_previous(mode='prev')
         self.update_month()
+
 
 
 class SettingsScreen(Screen):
