@@ -927,50 +927,56 @@ class AddListScreen(Screen):
         # Cambia la pantalla actual a la vista de listas
         self.manager.current = "list"  # Asegúrate de que "listas" sea el nombre correcto de la pantalla
 
+from kivy.properties import StringProperty
+
 class CalendarScreen(Screen):
-    current_month = StringProperty("Noviembre")  # Usa StringProperty para enlazar con el archivo KV
+    current_month = StringProperty("Noviembre")
+    current_year = StringProperty("2024")  # Nueva propiedad para el año
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        # Crear un Carousel para las imágenes del calendario
-        self.carousel = Carousel(direction='right', scroll_timeout=0)  # Desactivar scroll horizontal
-        self.months = ["Septiembre", "Octubre", "Noviembre", "Diciembre", "Enero",
-                       "Febrero", "Marzo", "Abril", "Mayo", "Junio"]
+        self.carousel = Carousel(direction='right', scroll_timeout=0)  # Desactiva el scroll horizontal
+        self.months = [
+            "Septiembre", "Octubre", "Noviembre", "Diciembre", 
+            "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio"
+        ]
 
-        # Añadir imágenes al Carousel
-        for i in range(1, 10):  # Asumiendo 10 imágenes para los meses
+        # Define los años asociados a los meses
+        self.years = ["2024"] * 4 + ["2025"] * 6  # 2024 hasta diciembre, 2025 en adelante
+
+        # Añade imágenes al Carousel (placeholder)
+        for i in range(10):
             img = Image(
-                source=f'assets/mes_{i}.png',
-                allow_stretch=True,  # Permitir que se ajusten al contenedor
-                keep_ratio=True      # Mantener la proporción original
+                source=f'assets/mes_{i + 1}.png',
+                allow_stretch=True,
+                keep_ratio=True
             )
-            img.bind(
-                width=lambda instance, value: setattr(instance, 'height', value * (img.image_ratio or 1))
-            )  # Ajustar el alto según el ancho y la proporción de la imagen
             self.carousel.add_widget(img)
 
-        # Añadir el Carousel al contenedor definido en el archivo KV
+        # Vincula el evento de cambio de índice
+        self.carousel.bind(index=self.update_month)
+
+        # Añade el Carousel al contenedor
         self.ids.carousel_container.add_widget(self.carousel)
 
-        # Inicializar en el índice correspondiente a noviembre
-        self.carousel.index = 2  # Índice de noviembre (imagen mes_3.png)
+        # Inicializa en el índice correspondiente a noviembre
+        self.carousel.index = 2
         self.update_month()
 
-    def update_month(self):
-        """Actualiza el texto del mes basado en la imagen actual del Carousel."""
-        current_index = self.carousel.index
-        self.current_month = self.months[current_index]
+    def update_month(self, instance=None, value=None):
+        """Actualiza el mes y el año basado en el índice actual del Carousel."""
+        index = self.carousel.index
+        self.current_month = self.months[index]
+        self.current_year = self.years[index]
 
     def next_month(self):
-        """Avanza al siguiente mes en el Carousel."""
-        self.carousel.load_next(mode='next')
-        self.update_month()
+        """Avanza al siguiente mes."""
+        self.carousel.load_next()
 
     def previous_month(self):
-        """Retrocede al mes anterior en el Carousel."""
-        self.carousel.load_previous(mode='prev')
-        self.update_month()
+        """Retrocede al mes anterior."""
+        self.carousel.load_previous()
 
 
 

@@ -123,7 +123,6 @@
 <CalendarScreen>:
     BoxLayout:
         orientation: 'vertical'
-        padding: dp(20) 
         # Header
         BoxLayout:
             orientation: 'horizontal'
@@ -161,57 +160,102 @@
                 on_release: app.root.current = "home"
                 background_normal: 'assets/back.png'
                 background_down: 'assets/back.png'
-        # Espacio entre el header y el contenido
         
         BoxLayout:
-            orientation:'horizontal'
-            padding: dp(15)
-            spacing: dp(15)
-            size_hint_y: None
-            height: dp(60)
-
-            canvas:
-                Color:
-                    rgba: 235 / 255, 208 / 255, 215 / 255, 1  # Color de fondo del header
-                RoundedRectangle:
-                    pos: self.pos
-                    size: self.size
-                    radius: [20, 20, 20, 20]
-            Button:
-                size_hint: None, None
-                size: dp(50), dp(50)
-                pos_hint: {"center_y": 0.5}
-                on_release: on_release: root.previous_month()
-                background_normal: 'assets/details3.png'
-                background_down: 'assets/details3.png'
-            Label:
-                id: month_label
-                text: root.current_month
-                font_size: "35sp"
-                font_name: "assets/TittleRegular.otf"
-                color: 0, 0, 0, 1
-                valign: "middle"
-                halign: "center"
-            Button:
-                size_hint: None, None
-                size: dp(50), dp(50)
-                pos_hint: {"center_y": 0.5}
-                on_release: on_release: root.next_month()
-                background_normal: 'assets/details4.png'
-                background_down: 'assets/details4.png'
-        # Contenedor para el carrusel
-        BoxLayout:
-            orientation: 'vertical'
-            height: 1
-            canvas:
-                Color:
-                    rgba: 0, 0, 0, 1  # Fondo blanco
-                RoundedRectangle:
-                    pos: self.pos
-                    size: self.size
-                    radius: [20, 20, 20, 20]
+            orientation:'vertical'
+            padding: dp(15) 
+            spacing: dp(25)
             BoxLayout:
-                id: carousel_container
+                orientation:'horizontal'
+                padding: dp(15)
+                spacing: dp(15)
+                size_hint_y: None
+                height: dp(70)
+
+                canvas:
+                    Color:
+                        rgba: 235 / 255, 208 / 255, 215 / 255, 1  # Color de fondo del header
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [20, 20, 20, 20]
+                Button:
+                    size_hint: None, None
+                    size: dp(50), dp(50)
+                    pos_hint: {"center_y": 0.5}
+                    on_release: on_release: root.previous_month()
+                    background_normal: 'assets/details3.png'
+                    background_down: 'assets/details3.png'
+                BoxLayout:
+                    orientation:'vertical'
+                    spacing: dp(10)
+                    Label:
+                        id: month_label
+                        text: root.current_month
+                        font_size: "35sp"
+                        font_name: "assets/TittleRegular.otf"
+                        color: 0, 0, 0, 1
+                        valign: "middle"
+                        halign: "center"
+                    Label:
+                        id: year_label
+                        text: root.current_year
+                        font_size: "25sp"  # Tamaño más pequeño
+                        font_name: "assets/TittleRegular.otf"
+                        color: 0, 0, 0, 1
+                        valign: "middle"
+                        halign: "center"
+                        text_size: self.size
+                Button:
+                    size_hint: None, None
+                    size: dp(50), dp(50)
+                    pos_hint: {"center_y": 0.5}
+                    on_release: on_release: root.next_month()
+                    background_normal: 'assets/details4.png'
+                    background_down: 'assets/details4.png'
+            # Contenedor para el carrusel
+            BoxLayout:
+                orientation: 'vertical'
+                padding: dp(5) 
+                canvas:
+                    Color:
+                        rgba: 235 / 255, 208 / 255, 215 / 255, 1  # Fondo blanco
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.width, self.height * 0.90  # Ajustar altura proporcionalmente (70% de la altura del contenedor)
+                        radius: [15, 15, 15, 15]
+                BoxLayout:
+                    id: carousel_container
+                    size_hint_y: None
+                    height: self.parent.height * 0.82  # Ajustar la altura del contenedor de acuerdo a la proporción
+            BoxLayout:
+                orientation: 'vertical'
+                spacing: dp(0.25)
+                padding: dp(15)
+                Label:
+                    text: "¡Crea un recordatorio rápido!"
+                    font_size: "30sp" 
+                    font_name: "assets/TittleRegular.otf"
+                    color: 0, 0, 0, 1  # Negro
+                    valign: 'middle'
+                    halign: 'center'
+                MDRaisedButton:
+                    text: "Crear recordatorio"
+                    pos_hint: {'center_x': 0.5}
+                    size_hint: (0.7, None)
+                    height: dp(48)  # Altura del botón
+                    md_bg_color: 0.835, 0.506, 0.631, 1  # Color de fondo rosa
+                    text_color: 1, 1, 1, 1  # Color del texto (blanco)
+                    font_size: "25sp"  
+                    font_name: "assets/TittleRegular.otf"
+                    on_release: root.manager.current = 'add_recordatorio'
+            Widget:
+                size_hint_y: 0.1
+
+                    
+
+
+
                 
 
             
