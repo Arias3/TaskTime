@@ -927,9 +927,51 @@ class AddListScreen(Screen):
         # Cambia la pantalla actual a la vista de listas
         self.manager.current = "list"  # Asegúrate de que "listas" sea el nombre correcto de la pantalla
 
-
 class CalendarScreen(Screen):
-    pass
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        # Inicializa el atributo current_month
+        self.current_month = "Noviembre"  # Puedes establecer un valor inicial, o calcularlo dinámicamente
+        
+        # Crear un Carousel para las imágenes del calendario
+        self.carousel = Carousel(direction='right', scroll_timeout=0)  # Desactivar scroll horizontal
+        self.months = ["Septiembre", "Octubre", "Noviembre", "Diciembre", "Enero",
+                       "Febrero", "Marzo", "Abril", "Mayo", "Junio"]
+
+        # Añadir imágenes al Carousel
+        for i in range(1, 10):  # Asumiendo 10 imágenes para los meses
+            img = Image(
+                source=f'assets/mes_{i}.png',
+                allow_stretch=True,  # Permitir que se ajusten al contenedor
+                keep_ratio=True      # Mantener la proporción original
+            )
+            img.bind(
+                width=lambda instance, value: setattr(instance, 'height', value * (img.image_ratio or 1))
+            )  # Ajustar el alto según el ancho y la proporción de la imagen
+            self.carousel.add_widget(img)
+
+        # Añadir el Carousel al contenedor definido en el archivo KV
+        self.ids.carousel_container.add_widget(self.carousel)
+
+        # Inicializar en el índice correspondiente a noviembre
+        self.carousel.index = 2  # Índice de noviembre (imagen mes_3.png)
+        self.update_month()
+
+    def update_month(self):
+        """Actualiza el texto del mes basado en la imagen actual del Carousel."""
+        current_index = self.carousel.index
+        self.current_month = self.months[current_index]
+
+    def next_month(self):
+        """Avanza al siguiente mes en el Carousel."""
+        self.carousel.load_next(mode='next')
+        self.update_month()
+
+    def previous_month(self):
+        """Retrocede al mes anterior en el Carousel."""
+        self.carousel.load_previous(mode='prev')
+        self.update_month()
 
 
 class SettingsScreen(Screen):
