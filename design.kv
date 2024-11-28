@@ -32,10 +32,11 @@
         MDRaisedButton:
             text: "Acceder"
             pos_hint: {'center_x': 0.5}
-            size_hint: (0.6, None)
-            height: dp(48)  # Altura del botón
+            size_hint: (0.8, None)
+            height: dp(60)  # Altura del botón
             md_bg_color: 0.835, 0.506, 0.631, 1  # Color de fondo rosa
             text_color: 1, 1, 1, 1  # Color del texto (blanco)
+            font_size: dp(28)
             on_release: root.go_to_home()  # Acción al presionar el botón
 
         # Espacio vacío para ajuste visual
@@ -45,9 +46,9 @@
 
 <CustomButton@MDCard>:
     image_source: ''  # Definir la propiedad de imagen
-    radius: dp(15)
+    radius: dp(25)
     size_hint: None, None
-    size: dp(220), dp(140)  # Tamaño más proporcional
+    size: dp(230), dp(150)  # Tamaño más proporcional
     padding: dp(10)
     ripple_behavior: True
     md_bg_color: 235 / 255, 208 / 255, 215 / 255, 1  # Color de fondo personalizado
@@ -61,14 +62,14 @@
         Image:
             source: root.image_source  # Utiliza la propiedad image_source
             size_hint: None, None
-            size: dp(126), dp(120)  # Tamaño ajustado de la imagen
+            size: dp(136), dp(130)  # Tamaño ajustado de la imagen
             pos_hint: {"center_x": 0.5}  # Centra la imagen horizontalmente
 
 
 <HomeScreen>:
     BoxLayout:
         orientation: 'vertical'
-        
+        spacing: dp(15)
         BoxLayout:
             orientation: 'horizontal'
             padding: dp(15)
@@ -91,7 +92,7 @@
                 pos_hint: {"center_y": 0.5}
 
             Label:
-                text: "MENÚ  "
+                text: "MENÚ   "
                 font_size: "35sp"
                 font_name: "assets/TittleRegular.otf"
                 color: 0, 0, 0, 1
@@ -100,10 +101,8 @@
 
         BoxLayout:
             orientation: 'vertical'
-            spacing: dp(20)
+            spacing: dp(50)
             padding: dp(20)
-            size_hint_y: None
-            height: self.minimum_height
 
             CustomButton:
                 image_source: 'assets/recordatorios.png'
@@ -116,6 +115,8 @@
             CustomButton:
                 image_source: 'assets/calendario.png'
                 on_release: root.go_to_calendar()
+        Widget:
+            size_hint_y: 0.35
 
 #Pantalla para los calendarios
 <CalendarScreen>:
