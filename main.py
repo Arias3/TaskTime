@@ -21,7 +21,6 @@ from kivy.clock import Clock
 from kivy.core.audio import SoundLoader
 from kivy.properties import StringProperty
 from kivy.graphics import Color, Rectangle
-from kivy.core.window import Window
 from database import (
     obtener_todos_recordatorios,
     agregar_recordatorio,
@@ -38,13 +37,6 @@ from database import (
 )
 import uuid  # Para generar claves únicas
 import math
-
-# Ajuste para el tamaño de la ventana
-Window.size = (414, 896)  # Ajustar tamaño de la ventana si es necesario
-
-# O también puedes ajustar la escala en función de la densidad de píxeles
-Window.minimum_width = 414
-Window.minimum_height = 896
 
 # Registrar la fuente personalizada
 LabelBase.register(
